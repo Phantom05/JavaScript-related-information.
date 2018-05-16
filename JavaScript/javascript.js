@@ -69,7 +69,6 @@ for (var i = 0; i < arr.length; i++) {
 const arr = [10, 12, 15, 21];
 for (let i = 0; i < arr.length; i++) {
   // ES6 의 let 은 함수가 호출 될 때 마다 인덱스 i 값이 바인딩 되는 새로운 바인딩 기법을 사용합니다.
-  // 더 자세한 내용은 다음 링크에서 확인하세요.
   setTimeout(function() {
     console.log('The index of this number is: ' + i);
   }, 3000);
@@ -113,4 +112,27 @@ let monsterPower = setInterval(function () {
   }
 
 }, 500)
+
+
+
+// 이런 문제를 풀어봤다. 99단을 출력하는것인데 이럴 경우 전역 스코프 때문에 i 의 값이 변화되어 2단밖에 출력되지 않는다.
+function printTimesTable(a) {
+  for (i = 1; i <= 9; i++) {
+    console.log(a + " * " + i + " = " + a * i);
+  }
+}
+for (var i = 2; i <= 9; i++) {
+  printTimesTable(i);
+}
+
+//때문에 이렇게 바꿔줘야한다.
+function printTimesTable(a) {
+  for (i = 1; i <= 9; i++) {
+    console.log(a + " * " + i + " = " + a * i);
+  }
+  i=a;//여기서 전역으로 바뀐 i를 a의 2값으로 바꿔주면서 다시 아래에서 3부터 시작하여 증가할수있는 부분이다. 함수호이스팅, 전역변수, 호출방법이 들어가있는 문제로 한번 더 생각하자.
+}
+for (var i = 2; i <= 9; i++) {
+  printTimesTable(i);
+}
 
