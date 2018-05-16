@@ -96,3 +96,21 @@ buttonR.addEventListener('click',function(){
   fish.style.margin = target +'px';
   // 이렇게하면 간단하게 해결할 수있다. 숫자부분으로 형변환을해서 변수에 넣을뒤 넣어주는 방법이다.
 })
+
+
+// 이런 경우도 있다.
+
+let power = 0;
+let monsterPower = setInterval(function () {
+  power += Math.floor(Math.random() * 20);
+  monsterGage.style.height = power + '%';
+  console.log()
+
+  if (parseInt(monsterGage.style.height)>100) {
+    //if 에 css값을 넣어 비교하게 될때 >=는 정수만 되므로 문자열이 들어가면 안되서 이렇게 정수형으로 바꿔준 후 사용해주면 된다.
+    alert('괴물이 승리하였다!');
+    clearInterval(monsterPower);
+  }
+
+}, 500)
+
