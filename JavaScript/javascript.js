@@ -1,5 +1,5 @@
 
-// 이벤트 위임
+// *이벤트 위임*
 
 //아이템 갯수마다 이벤트 리스너를 생성, 등록하는 것보다 부모 엘리먼트에 이벤트를 걸고 캡쳐링을 이용한 방법이 훨씬 효율적이다, 아이템마다 모두 이벤트를 주는 것보다 한번의 이벤트의 캡쳐링으로 걸러주는것이 훨씬 브라우저에 부담을 적게 주기 때문이다.
 
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-//루프에서 클로져 이용하기
+//*루프에서 클로져 이용하기*
 
 //setTimeout, setInterval 등 비동기식으로 작동하는 함수을 포문안에서 딜레이를 주고 싶을때, 대부분은 아래와 같이 로직을 구현할것이다.
 
@@ -50,7 +50,7 @@ for (var i = 0; i < arr.length; i++) {
 
 
 
-//클로저
+//*클로저를 이용하여 반복문 값 제대로 바인딩하기*
 
 // i 값 을 setTime 함수 안에 전달하여 각 함수 호출마다 올바른 값에 접근하게 합니다.
 const arr = [10, 12, 15, 21];
@@ -75,3 +75,24 @@ for (let i = 0; i < arr.length; i++) {
   }, 3000);
 }
 
+
+
+// * 자바스크립트로 CSS 제어 *
+// CSS와 자바스크립트는 분리해서 최대한 사용하는것이 좋지만 피치 못할 사정으로 또는 고급 CSS를 위해 JS로 CSS를 제어해야할 때가 있다. 그럴땐 +=로 CSS를 제어할때가 있는데 이때 주의할 점은 바로 형변환이다.
+
+let buttonR = document.getElementById('buttonR');
+let fish =document.getElementById('fish');
+buttonR.addEventListener('click',function(){
+  fish.style.margin += 10 +'px';
+  // 흔히들 이렇게 10으로 간단하게 퉁 쳐버리는 경우가 있을수 있는데 이럴때 정상적으로 동작하지 않는다 뒤에 px가 string으로 정수에서 동작하는 +=가 동작하지 않기 떄문이다.
+})
+
+
+let buttonR = document.getElementById('buttonR');
+let fish =document.getElementById('fish');
+let target =0;
+buttonR.addEventListener('click',function(){
+  target += 10;
+  fish.style.margin = target +'px';
+  // 이렇게하면 간단하게 해결할 수있다. 숫자부분으로 형변환을해서 변수에 넣을뒤 넣어주는 방법이다.
+})
