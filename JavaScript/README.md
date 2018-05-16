@@ -13,6 +13,7 @@ JavaScript
 ## prototype
 + prototype
 ## Contrubytors
-<hr>
+
 + Phantom05
+
 <monster2jy@gmail.com>
