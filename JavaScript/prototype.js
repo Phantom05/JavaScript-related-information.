@@ -179,7 +179,86 @@ console.log(A.prototype.x)
 
     보는거와 같이 위에는 그대로 할당이 되어 변경되어도 콘솔에서 hello를 유지하는 반면 아래는 변경되는 동시에 위에서 참조된 x:hello가 x:bye로 변경된것을 확인할 수 있다.
 
+    하지만 후에 프로토타입이 변경된다고 해도 호이스팅이 되지 않기 때문에 
 
+
+
+
+
+  //prototype patten
+  
+  //상속 
+
+  //메모리 할당// 그냥 F.prototype.test=function(){}이런식으로 직접적으로 정의하게되면 힙 메모리 어딘가에 함수가 할당되고 test프로토타입에는 그 참조가 들어가게 된다. 결국 prototype에 직접 정의하는게 아니고 모두 참조하는 방식으로 사용된다 , 링킹
+
+  //기존에 있던 person 객체를 참조하여 create_object함수의 매개변수로  넣어 function F의 prototype으로 넣고 new F() 인스턴트로 생성하게 되면, F.prototype을 정의하긴 하지만 기존의 person을 "참조"하게 되기 때문에 원형의 person을 수정하게 되면 모두 변경된다. 
+
+  // 쉽게말하자면 모두 링킹 되기때문에 원형을 수정하면 모두 수정이된다. 또한, 인스턴스에서 따로 수정한 사항은 원형에 영향을 끼치지 않는다.
+
+    var person = {
+      name: 'zzoon',
+      getName: function () {
+        return this.name;
+      },
+      setName: function (arg) {
+        this.name = arg;
+      }
+    }
+
+    function create_object(o) {
+      function F() {}
+      F.prototype = o;
+      return new F();
+    }
+
+    // create_object함수의 매게변수로 호출될때마다 function F()의 prototype은 교체되어 새로 정의되고 person이 상속되어
+    // 인스턴트마다 매게변수로 들어온 object로 상속된다.
+    // 떄문에 해당 인스턴트안에서 수정을 해도 링킹된게 아니라 상속된거 이므로, 원형의 F함수 prototype에는 영향을 받지 않는다. 
+
+    var testA = create_object(person);
+    var testB = create_object(person);
+    var testC = create_object(person);
+    var student = create_object(person);
+    var gamer = create_object(person);
+
+    console.log('name of testA : ', testA.name);
+    // >> zzoon
+
+    person.name='hi';
+    console.log('name of testC : ',testC.name);
+    // >> hi
+    //그럼 이럴땐 어떻게 될까?
+    //그냥 함수 F의 인스턴트이기 때문에 모두 프로토타입 person을 가르키면서 생성된것이다. 즉, 함수 F안의 prototype에 연결된 prototype object에 __proto__ 되있지만, person을 참조하고 있기 때문에, person이 수정되면 모두 바뀜. 인스턴스안에 참조된 내용을 바꿔도 인스턴스안에서 바뀌어 사용될 순 있지만, 원형의 prototype object엔 영향이 가지 않는다. 하지만 참조된 원형의 객체를 수정할 경우 인스턴트에서 prototype을 따로 정의하지 않는이상 변화하게 된다.
+    다시 console.log('!!!',person) 이렇게 출력 해보면 person의 이름이 name으로 바껴있는걸 확인할수 있다.
+
+    testB.name = 'gang';
+    console.log('name of testB : ', testB.name);
+    // >> gane
+
+    student.setName('me');
+    console.log('name of student : ', student.getName());
+    // >> me
+
+    gamer.name = 'junyeong';
+    console.log('name of gamer : ', gamer.name);
+    // >> junyeong
+
+    Object.getPrototypeOf(student).name = 'everything is changed';
+    // F는 create_object를 호출할 때 마다 새로 생기는 함수지만, F.prototype은 외부에 있던 person 객체를 참조하기에 student의 프로포타입 체인 제일 아래에 있는 객체인 F.prototype을 수정하면 곧 person 객체를 수정한 것이나 마찬가지가 된다.
+
+
+
+    // Tip! console.log 는 비동기이다!
+
+    var A = function() {};
+    var B = new A();
+     A.prototype.x='hello';
+     console.log(B.x); 
+     console.log(B); 
+     //  B.x >> hello
+     //  B >> x:bye
+     A.prototype.x='Bye';
+    //원래라면 위의 상태에서 당연히 hello가 찍혀야 맞겠지만 콘솔로그가 비동기통신이기 떄문에 아래서 bye로 바꼇을 경우에 콘솔로 보면 다돌아간 출력이 되도 bye로 바껴서 보여지게된다.
 
 
     //
