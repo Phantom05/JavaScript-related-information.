@@ -479,6 +479,82 @@
         때문에 재귀로 이루어지는 이벤트 루프와 동시성들은 비동기 통신을 하고 setTimeout 같은 함수는 DOM API에서 동작한다.
 
 
+        var person = {
+        name: 'zzoon',
+        getName: function () {
+          return this.name;
+        },
+        setName: function (arg) {
+            this.name = arg;
+          }
+        };
+
+        function create_object(o) {
+        function F() { };
+        F.prototype = o;
+        return new F();
+       }
+
+
+       function extend(obj, prop) {
+
+        if (!prop) {
+        prop = obj;
+        obj = this;
+        }   //prop이 없을때 실행되지 않음.
+      for (var i in prop) {
+        console.log(prop[i])
+        obj[i] = prop[i];
+
+        //////
+        
+        야이 븅신아 기억해라 obj[i]면 키값이 i에 들어가기 때문에,
+         obj['setAget']= function (age) {
+          this.age = age;
+        },
+        obj['getAge']= function () {
+            return this.age;
+         }
+       };
+        요렇게 될 수 있는거다 ; 
+        //////
+      
+      }
+        return obj;
+      };
+
+      var student = create_object(person);
+      var added = {
+        setAge: function (age) {
+          this.age = age;
+        },
+        getAge: function () {
+          return this.age;
+        }
+      };
+
+      extend(student, added);
+      //student 인스턴트 객체를 확장
+      //added 객체를 student 객체로 added를 넣음.
+
+      student.setAge(25);
+      console.log(student.getAge());
+      console.log(student);
+      console.dir(student);
+
+      //
+      원래라면 새로운 객체로 대체될때 이전의 인스턴트의 참조값갱신할수 없지만   참조방식일때는 덮어쓰더라도 참조되는 객체바뀌지 않는이상 새로 대체되지 않는다.
+
+      let tager = {
+        name: 'phantom'
+      }
+      let aaa = new create_object(person);
+      console.log(aaa);
+
+      person.name = 'aa';
+      let bbb = new create_object(tager);
+
+      //때문에 이렇게 봤을때 person.name을 변경했을때 위의 aaa는 변경되지만 새로운  객체로 tager을 넣었을땐 변경되지 않음을 알수있다.
 
 
         --prototype layout--
