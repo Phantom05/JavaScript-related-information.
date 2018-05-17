@@ -1,6 +1,139 @@
 /*
 
+//prototype 속성을 새 객체로 대체하면 기본 constructor 속성이 삭제된다.
+
+    prototype 속성의 기본값은 다른 값으로 대체할 수 있다.
+    하지만 prototype 속성을 바꾸면 원래의 prototype 객체에서 볼 수 있었던 기본 constructor 속성도 사라지게 된다.
+    다음은 Foo 생성자 함수를 만들고 Foo 의 prototype 속성을 빈 객체로 대체한 후 인스턴스의 constructor 속성이 사라졌는지 확인해 보는 코드이다.
+    이제 이 코드에서는 constructor 속성은 Object() 생성자를 참조하게 될 것이다.
+
+    var Foo = function () {}
+    Foo.prototype = {}
+    var fooInstance = new Foo();
+    console.log(fooInstance.constructor == Foo); // false 가 기록된다. // 참조가 망가졌다. 즉, 연결고리가 끊어진 것이다.
+    console.log(fooInstance.constructor);
+    // Foo 생성자 함수 가 아닌 Object() 가 기록된다.
+
+    var Bar = function Bar() {};
+    var barInstance = new Bar();
+    console.log(barInstance.constructor == Bar); // true 가 기록된다. console.log(barInstance.constructor); // Bar 생성자 함수가 기록된다.
+
+    만약 자바스크립트가 설정한 기본 prototype 속성을 대체할 생각이라면 즉, 자바스크립트 객체지향 패턴에서 종종 사용되는 방식등을 사용할 경우에는 생성자 함수를 참조하는 constructor 속성을 원래대로 복원해주어야 한다
+    다음은 앞의 코드를 조금 수정하여 constructor 속성이 원래의 생성자 함수를 올바르게 참조하도록 해보자.
+
+    // prototype 속성을 새 ★객체로★ 대체하면 이전에 만든 인스턴스는 갱신되지 않는다. 값으로 바꾸면 대체된다.
+
+
+    var Foo = function Foo() {};
+    Foo.prototype = {
+      constructor: Foo
+    };
+    var fooInstance = new Foo();
+    console.log(fooInstance.constructor == Foo); // true 가 기록된다. console.log(fooInstance.constructor); // Foo 생성자 함수가 기록된다.
+
+    var Foo = function Foo() {};
+    Foo.prototype.x = 10;
+    var FooInstance = new Foo();
+    console.log(FooInstance.x); // 예상한 대로 10 이 기록된다. 
+    // prototype 객체를 새로 만든 Object() 객체로 대체/정의해 보도록 한다. 
+
+    Foo.prototype = {
+      x: 20
+    };
+    console.log(FooInstance.x);
+    // 10 이 기록된다. 
+
+     위에서 prototype 을 새로운 객체로 갱신했으니까 20 이 되어야 하지 않을까? 라고 생각할 수 있다. FooInstance 는 여전이 처음 인스턴스로 만들어진 시점의 prototype 객체를 참조하고 있다. 
+  
+    // Foo() 의 인스턴스를 새로 만들어 본다. 
+    var NewFooInstance = new Foo();
+
+    // 새로 만든 인스턴스는 새로운 prototype 객체인 { x : 20 } 와 묶여있게 된다.
+
+    console.log(NewFooInstance.x); 
+
+    // 20 이 기록된다.
+    여기서 알 수 있는 사실은 인스턴스를 만든 뒤에는 객체의 prototype 속성을 새 객체로 대체하면 안된다는 것이다.
+    만약 새 객체로 대체해버리면 같은 생성자에서 만든 인스턴스라 해도 서로 다른 prototype 객체를 참조하게 될 것이다.
+
+    //
+    사용자 정의 생성자도 네이티브 생성자처럼 프로토타입을 상속할 수 있다.
+
+    var Person = function () {}; // 모든 Person 인스턴스는 legs, arms, countLimbs 속성을 상속하도록 정의한다. 
+    Person.prototype.legs = 2;
+    Person.prototype.arms = 2;
+    Person.prototype.countLimbs = function () {
+      return this.legs + this.arms;
+    };
+    var chuck = new Person();
+    console.log(chuck.countLimbs()); // 4 가 기록된다.
+
+    위의 코드에서 Person() 생성자 함수를 만든 후 Person() 의 prototype 속성에 몇 개의 속성을 추가하여 모든 인스턴스가 상속받도록 정의했다.
+    이 코드는 자바스크립트가 네이티브 객체를 상속할 대 사용했던 것과 똑같은 방법으로 프로토타입 체인을 사용한 것이다.
+    전달된 매개변수가 없을 때 프로토타입에서 속성을 상속받은 생성자 함수를 만들어보면 이를 조금 더 잘 이해할 수 있을 것이다.
+    다음 코드에서 Person() 생성자는 전달된 매개변수가 있으면 이를 사용해 인스턴스 속성을 추가하지만 전달된 값이 아예 없거나 한 개만 있으면 프로토타입에서 상속받은 값을 사용한다.
+    인스턴스 속성이 있으면 상속된 속성이 사용되지 않는다.
+    따라서 어느 경우에든 속성을 문제없이 사용할 수 있을 것이다.
+
+    var Person = function (legs, arms) { 
+      // 프로토타입에서 상속받은 값을 가린다. 
+      if (legs !== undefined) { 
+      this.legs = legs; 
+    } 
+      if (arms !== undefined) { 
+      this.arms = arms; 
+    } 
+    }; 
+    Person.prototype.legs = 2; 
+    Person.prototype.arms = 2; 
+    Person.prototype.countLimbs = function () { 
+      return this.legs + this.arms; 
+    }; 
+    
+    var chuck = new Person(4,4); 
+    console.log(chuck.countLimbs()); // 8 이 기록된다. 
+    // 매개변수를 전달하지 않을 경우 
+    var chuck2 = new Person(); 
+    console.log(chuck2.countLimbs()); // 4 가 기록된다. 
+    // 전달된 매개변수가 없기 때문에 Person 에는 속성을 가지고 있지 않다. 
+    // 하지만 프로토타입 체인을 통해 검색한 결과를 통해 4 를 기록하게 되는 것이다.
+
+    //
+    상속 체인 만들기
+    
+    프로토타입 상속은 전통적인 객체 지향 프로그래밍 언어에서 볼 수 있던 상속 패턴을 흉내내기 위해 만들어진 것이다.
+    자바스크립트에서 인스턴스란 간단히 말해 다른 객체의 속성에 접근할 수 있는 객체이다.
+    이를 위해 먼저 상속받고자 하는 부모 객체의 인스턴스를 만든 후 생성자의 prototype 에 할당하면 부모 객체를 상속받을 수 있다.
+    prototype 속성에 부모 객체의 인스턴스를 할당하고 나면 부모 객체 생성자의 prototype 과 상속받는 객체 사이에는 연결고리(__proto) 가 생기게 된다.
+
+
+    var Person = function () {
+      this.bar = 'bar';
+    };
+    Person.prototype.foo = 'foo';
+    var Chef = function () {
+      this.goo = 'goo';
+    };
+
+    Chef.prototype = new Person(); // Person() 객체의 인스턴스를 할당 
+    var cody = new Chef();
+
+    위 코드에서 Chef 객체( = cody) 는 Person 을 상속받는다.
+    다시 말해, 어떤 속성을 Chef 객체에서 발견하지 못하면 그 다음에는 Person() 생성자 함수의 prototype 에서 속성을 찾는다는 뜻이다.
+    이렇게 상속 관계를 만들기 위해 해야 할 일은 Chef.prototype 의 값으로 Person() 객체의 인스턴스를 할당 해주는 것이 전부이다.
+      *
+    위 코드에서 한 일은 네이티브 객체에서 원래 사용하고 있던 시스템을 빌려온 것 뿐이다.
+    prototype 속성에 있어서 원래 사용하던 Object() 값이나 Person() 값은 다른 점이 없다.
+    다시 말해, 객체의 상속된 속성에 접근하면 객체를 만든 생성자 함수의 prototype 속성에서 그 값을 찾을 것이라는 의미이다.
+      *
+
+
+
 //prototype은 construct(생성자)를 가진 자만이 자격을 부여할 수 있다 즉 인스턴트 new를 생성할 수 있어야 가능한것이다 그것은 곧 함수이다.
+
+모든 Function() *인스턴스*에는 prototype 속성이 있다.
+
+프로토타입 체인의 끝은 Object.prototype 이다. 그 끝에서도 찾지 못할경우 undefined가 출력된다.
 
 //prototype을 생성하기 위해선 __proto__가 무조건 있어야 한다 이것은 prototype link이며 모든 object에 들어있다.
 
@@ -223,9 +356,18 @@ console.log(A.prototype.x)
     person.name='hi';
     console.log('name of testC : ',testC.name);
     // >> hi
+    
     //그럼 이럴땐 어떻게 될까?
     //그냥 함수 F의 인스턴트이기 때문에 모두 프로토타입 person을 가르키면서 생성된것이다. 즉, 함수 F안의 prototype에 연결된 prototype object에 __proto__ 되있지만, person을 참조하고 있기 때문에, person이 수정되면 모두 바뀜. 인스턴스안에 참조된 내용을 바꿔도 인스턴스안에서 바뀌어 사용될 순 있지만, 원형의 prototype object엔 영향이 가지 않는다. 하지만 참조된 원형의 객체를 수정할 경우 인스턴트에서 prototype을 따로 정의하지 않는이상 변화하게 된다.
     다시 console.log('!!!',person) 이렇게 출력 해보면 person의 이름이 name으로 바껴있는걸 확인할수 있다.
+
+    *
+    * 부모의 객체의 메서드를 그대로 상속받아 사용하는 방법을 살펴 보았다. 인스턴스(자식)의 메서드를 추가하거나 수정했을때 기능을 더 확장 시킬 수 있어야한다. 인스턴스를 수정했을때, 원형에 영향이 가지 않으므로 계속적으로 확장이 가능하다. *
+    * 
+    * 
+    student.setAge = function(age){...}
+    student.getAget = functuin(){...}
+    이런식으로 확장 시킬 순 있지만 이렇게 구현하면 코드가 지저분해지기 쉽상이다. 보다 갈금한 방법으로 범용적으로 extend()라는 이름의 함수로 객체에 자신이 원하는 함수를 추가할 수 있다.
 
     testB.name = 'gang';
     console.log('name of testB : ', testB.name);
