@@ -1,6 +1,25 @@
 /*
+      //
+      ☆ Prototype의 구동 원리 및 중요한 개념 ☆
 
-    //prototype 속성을 새 객체로 대체하면 기본 constructor 속성이 삭제된다.
+        console.log('---');
+        function testA(){}
+
+        // testA가 생성되면 함수이기때문에 우선적으로 Function prototype으로 __proto__가 되서 Function    기능을 사용할 수 있는것이고, 
+
+        //testA의 prototype이 생성된 다음, 그 prototype으로 constructor가 생성된 후 construct는 자신의    원형 함수를 가르키게 된다. 떄문에 이후 추가되는 인스턴트들을 관리하기 위해서는 testA.prototype.   이런식으로 생성하게 되는것이다. 즉, prototype의 객체로 또하나의 object를 생성하는 꼴이 되는거지..      바로 저 prototype이란 prototype을 통해 생성하는것이다. 
+
+        //생성된 인스턴트들은 __proto__가 constructor가 있는 prototype으로 참조되게 될것이고 거기서   원하는  이름의 object를 찾은 다음 사용하게 되는 것이다. 만약 이 prototype 안에 없을때 이  constructor에서   연결된 __proto__인 원형 함수로 찾아가서 찾는다. 
+
+        // 이렇게 사용되선 안되지만 원형 함수에도 없을시 원형 함수의 __proto__로 연결된 Function    prototype에서 찾을 것이고 그 Function prototype은 최상위 객체인 Object Prototype으로 연결된다.
+
+        // 또한 이 constructor는 최상위인 Built-in object인 Object Prototype과 연결되고 이 최상위     Object의 __proto__는 null 이다 가장 최상위이기 때문에 더 타고 올라갈게 없기 때문이다.
+        testA.prototype.SHOWME = 'HELLO PROTO!';
+        console.dir(testA)
+        // testA안의 prototype 객체 안에 SHOWME라는 객체가 생성되고 값으로 HELLO PROTO가 들어감
+
+
+      //prototype 속성을 새 객체로 대체하면 기본 constructor 속성이 삭제된다.
 
         prototype 속성의 기본값은 다른 값으로 대체할 수 있다.
         하지만 prototype 속성을 바꾸면 원래의 prototype 객체에서 볼 수 있었던 기본 constructor 속성도 사라지게 된다.
@@ -21,7 +40,7 @@
         만약 자바스크립트가 설정한 기본 prototype 속성을 대체할 생각이라면 즉, 자바스크립트 객체지향 패턴에서 종종 사용되는 방식등을 사용할 경우에는 생성자 함수를 참조하는 constructor 속성을 원래대로 복원해주어야 한다
         다음은 앞의 코드를 조금 수정하여 constructor 속성이 원래의 생성자 함수를 올바르게 참조하도록 해보자.
 
-        // prototype 속성을 새 ★객체로★ 대체하면 이전에 만든 인스턴스는 갱신되지 않는다. 값으로 바꾸면 대체된다.
+       // prototype 속성을 새 ★객체로★ 대체하면 이전에 만든 인스턴스는 갱신되지 않는다. 값으로 바꾸면 대체된다.
 
 
         var Foo = function Foo() {};
@@ -479,6 +498,9 @@
         때문에 재귀로 이루어지는 이벤트 루프와 동시성들은 비동기 통신을 하고 setTimeout 같은 함수는 DOM API에서 동작한다.
 
 
+        //
+        extends함수 inner 동작
+
         var person = {
         name: 'zzoon',
         getName: function () {
@@ -555,6 +577,67 @@
       let bbb = new create_object(tager);
 
       //때문에 이렇게 봤을때 person.name을 변경했을때 위의 aaa는 변경되지만 새로운  객체로 tager을 넣었을땐 변경되지 않음을 알수있다.
+
+
+      // **
+      //자식 클래스에서 부모 생성자의 인스턴트로 접근하여 prototype 설정
+
+      function Person(arg) {
+        this.name = arg;
+      }
+
+      Person.prototype.setName = function (value) {
+        this.name = value;
+      };
+
+      Person.prototype.getName = function () {
+        return this.name;
+      }
+
+      function Student(arg) {}
+
+      var you = new Person('iamhjoo');
+      // you라는 변수에 인스턴스 객체를 생성하여 Person의 내용을 상속함 name : iamhjoo; 라고 넣어둠
+
+      Student.prototype = you;
+      // Student.prototype 으로 인스턴스 객체 you를 참조함
+
+      // 이렇게 되면 Stuendt의 prototype으로 you인스턴트 를 참조하지만 링킹은 you 의 __proto__인  Person.prototype을 가르키게됨. 아직은 Person의 원형 함수에 접근할수 없음. 단지 프로토타입만 연결되었을뿐
+
+      // 즉, you 안에있는 Person 생성자의 prototype인 setName과 getName을 사용할 수 있다는 것임.
+
+      var me = new Student('zzoon');
+      //'zzoon'을 받은곳이 없어 사라짐.
+      // me라는 변수에 Student의 zzoon이 들어간 인스턴트를 생성함
+      // 현재 me에는 you가 들어가 있으며 Person 생성자의 prototype인 setName과 seName을 사용할 수 있는 상황.
+
+      console.log('setName 전 ', me);
+      // 하지만 지금 상황에서 me를 출력했을 경우 name으로 zzoon이 출력되지 않는다.
+
+      me.setName('zzoon');
+      // 이렇게 setName으로 prototype의 부모 생성자를 호출해서 this.name =value로 넣어줬을때 비로소 name에  zzoon이 입력 된다.
+      console.log(me.getName());
+      console.log('setName 후 ', me);
+
+
+      // 이를 극복하기위해
+      function Student(arg) {
+        Person.apply(this, arguments);
+        //apply는 배열 을 넘겨주는 것이지만 유사배열도 넘겨줄 수 있음.
+        //아래쪽에서 넣어줬지만 함수는 최상위로 호이스팅 되기 때문에 적용이 잘됨
+      }
+
+      function abc() {return}
+      //parameter를 받는곳이 없을땐, 0x023855 이런 메모리값으로 자동해제됨. 즉 가비지   컬렉터로 들어가게됨. 연결고리가 더이상 없기때문에,
+      //콘솔은 비동기기 때문에 지금상황에서 출력이 되지만 사실상 '2'는 메모리어딘가에   버려져있는것임
+      abc('2')
+
+      // 하지만 이러한 경우에 자식클래스가 부모 클래스의 인스턴트를 참조하여 prototype을 연결하고 있기때문에  자식클래스에 prototype을 추가할때 문제가 된다. 이럴경우 두 클래스 사이에 중재자를 하나 만들어주면 된다.
+
+
+
+
+
 
 
         --prototype layout--
