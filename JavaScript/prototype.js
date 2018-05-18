@@ -640,6 +640,22 @@
 
 
 
+
+
+
+      
+      Function.prototype.method = function(name,func){
+      this.prototype[name] =func;
+      //this는 함수로사용될 놈을 가르킴
+      // 선택된 객체의 prototype에 객체이름으로 매개변수를 넣고 값으로 func를 넣겠다.
+      //만약 this.prototype.name으로 닷 노테이션으로 들어가게되면 
+      //prototype의 네임을 name으로 두겠다는것. [name]하게되면  매게변수를 name에 넣겠다는것임.
+    }
+
+
+
+
+
         --prototype layout--
 
         HTMLDivElement.prototype

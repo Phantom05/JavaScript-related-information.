@@ -73,6 +73,12 @@ let gay = ab.forEach(x=>console.log(x));
 console.log(gay);
 ```
 
+
+- Object 관련
+  - prototype
+  - setPrototypeOf
+  
+
 - Math 관련
   - Math.abs
   - Math.ceil
