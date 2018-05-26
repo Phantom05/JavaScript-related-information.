@@ -232,3 +232,95 @@ function f3(f) {
   let remap = _map([1,2,3,4],(x)=> x*2);
     console.log(remap)
 ```
+
+>for문 list추출 코드를 줄이기 위한 함수를 따로 뺴냄
+```
+   function _each(list,iter){
+      for(var i =0;i<list.length;i++){
+        iter(list[i])
+      }
+      return list;
+    }
+```
+//list로 들어온 것들을 차례로 iter함수의 매개변수로 넣는다는 함수임.iter로는 필터링으로 만든함수가 들어감 그래서 필터링으로 걸러진것들을 list에 푸쉬함 
+
+
+```
+function _filter(list,predi){
+  var new_list =[];
+  _each(list,function(val){
+  if(predi(val)) new_list.push(val);
+});
+return new_list;
+}
+
+function _map(list,mapper){
+  var new_list=[];
+  _each(list,function(val){
+      new_list.push(mapper(val));
+  });
+  return new_list;
+}
+
+function _each(list,iter){
+  for(var i =0;i<list.length;i++){
+    iter(list[i])
+  }
+  return list;
+```
+
+그리고 이렇게 변경됨.
+
+//아래는 우리가 만들었던 위의 함수들의 기본 자바스크립트 메서드들이다.
+
+```
+  console.log(
+    [1,2,3].map((x)=> x*2)
+  )
+
+  console.log(
+    [1,2,3,4].filter((x)=> x%2)
+  )
+```
+
+기본적으로 있는건대 메서드이기 떄문에 메서드는 해당 클래스의 인스턴스에서만 사용할수 있는 특징이있음, 하지만 우리가 저렇게 만들면 Array뿐만 아니라 엘리먼트, 객체 등 다양하게 원하는데로 바꿔서 사용할 수있다.
+
+// 이런경우가 있다 흔히 사용하는 제이쿼리의 $('div')같은 기능의 네이티브인
+```
+console.log(
+  document.querySelectorAll('*')
+)
+```
+//확인시 배열로 확인할 수 있지만 이는 배열이 아니고 Array like이다 때문에 아래와같은 코드가 실행되지 않는다.
+```
+console.log(
+  document.querySelectorAll('*').map((x)=> x.nodeName)
+)
+```
+// 가짜 배열이기 때문에 오류가 나오게 된다.
+
+>하지만 우리가 만들었던 함수를 적용시키면?
+```
+console.log(
+  _map(document.querySelectorAll('*'),function(x){
+    return x.nodeName;
+  })
+)
+```
+결과는 아주 잘나온다.
+>동작 순서
+
+1. [_map함수]셀렉된(documetn.query...) node들을 _map 함수의 첫번째 파라미터(list)로 넣고 두번째 파라미터 (x)=> x.nodeName함수를 mapper인자로 넣는다.
+
+2.[_map함수]의 list파라미터로 들어온 리스트(셀렉된것)들을 다시 [_each함수]의 첫번째 파라미터(list)로 넣는다.
+
+3.[_each함수]에서 차례대로 들어온 리스트(셀렉된것)들을 순차적으로 iter함수의 매개변수로 넣는다(셀렉된것)넣는다
+
+4. [_map]함수로 돌아와 [_each함수]의 2번째 파리미터 즉, iter의 파라미터로 차례로 들어간 리스트들을 두번째 파라미터의 파라미터(val)로 넣는다.
+
+5. 처음에 mapper로 들어간 함수의 파라미터로 리스트(셀렉된 것)들이 들어간다. 처음에 정의한 [(x)=> x.nodeName함수] 즉 처음에 mapper로 들어온 정의한 함수의 파라미터로 차례대로 들어온 쿼리셀렉의 node들 리스트를 넣고 그 쿼리 셀렉의 node들을 차례대로 nodeName을 반환한다.
+
+6. 반환된 값들을 차례대로 new_list에 push한다
+7.new_list를 리턴한다.
+
+
