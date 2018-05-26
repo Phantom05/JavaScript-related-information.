@@ -22,6 +22,10 @@ REPEAT EVERY DAY STUDY
   - includes
   - repeat
   - startsWith
+  - trim
+  - trimEnd
+  - trimStart
+  - valueOf
 
 
 - Array 관련
@@ -50,14 +54,20 @@ REPEAT EVERY DAY STUDY
   - indexOf
   - lastIndexOf
   - toLocaleString()
+  - copyWithin
+  - find
+  - findIndex
+  - keys
+  - values
+  - entries
 
 >-reduce <br>
 재귀적임 [1,2].reduce((z, x)=> z+x, 1); 인자가 없을떈 배열의 가장 앞에값을 뽑아서 z로 삼음
 
 > map과 filter의 차이점 걸러주는것과 만들어주는것<br>
-위에는 false false true true로 만들어주고 아래는 3.54만 걸러줌
+조건을 걸 경우 map은 false false true true로 만들어주고 filter는 3.54를 배열로 걸러줌
 둘다 리턴값을 밷는데 forEach는 리턴값을 뱉지않음 
-그리고 map과 필터 모두 배열로 빼줌
+그리고 map과 filter 모두 배열로 빼줌
 
 ```
 -이해하고 가기-
@@ -77,7 +87,23 @@ console.log(gay);
 - Object 관련
   - prototype
   - setPrototypeOf
-  
+  - assign
+  - create
+  - entries
+  - freeze
+  - seal
+  - keys
+  - is
+  - isSealed
+  - isFrozen
+  - values
+
+```
+  const object2 = { 0: 'a', 1: 'b', 2: 'c' };
+  console.log(Object.entries(object2)[2]);
+  // expected output: Array ["2", "c"]
+```
+
 
 - Math 관련
   - Math.abs
