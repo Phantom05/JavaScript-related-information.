@@ -324,3 +324,162 @@ console.log(
 7.new_list를 리턴한다.
 
 
+
+
+>Curry 커링
+```
+function _curry(fn){
+  return function(a){
+    return function(b){
+      return fn(a,b);
+    }
+  }
+}
+```
+```
+var add = _curry(function(a,b){
+  return a+b;
+});
+```
+여기서 function(a,b){return a+b}가 curry의 fn이 됨. fn으로 들어가게 되면 
+
+_curry의 가장 안쪽의 fn함수가 될거고 
+
+아래 add10 = add(10)을 하게되면 
+```
+var add = function(a){
+    return function(b){
+      return fn(a,b);
+    }
+  }
+```
+이런 모양이 될것임
+>분석해보기
+```
+var add10 = add(10);
+console.log(add10(5));
+var add5 = add(5);
+console.log( add(5)(3));
+
+console.log(add5(3));
+console.log(add(10)(3));
+```
+커링 기법은 원하는 시점까지 밀어놨다가 한번에 계산하는 기법임.
+
+
+```
+function _curry(fn){
+  return function(a){
+    return function(b){
+      return fn(a,b);
+    }
+  }
+}
+```
+이상황일떄
+```
+console.log(add(1,2));
+```
+이렇게 하게되면 함수가 리턴되게됨.
+
+하지만 if로 중간에서 한번 조건을 걸어주면 동작하게 할 수 있음.
+```
+function _curry(fn){
+  return function(a,b){
+    return arguments.length ==2?fn(a,b) : function(b){return fn(a,b);};
+  }
+}
+```
+이렇게 바꿔주면 정상 동작하게 된다.
+```
+console.log(add(1,2));
+```
+
+>Currying 동작 방법
+
+쉬운 가독성을 위해 ()=> 대신 function()을 사용하였습니다.
+```
+
+function _curry(fn){
+  return function(a){
+    return function(b){
+      return fn(a,b);
+    }
+  }
+}
+
+let add = _curry(function(a,b){
+  return a+b;
+});
+
+var add10 = add(10);
+console.log(add10(5));
+var add5 = add(5);
+console.log( add(5)(3));
+
+console.log(add5(3));
+console.log(add(10)(3));
+```
+
+1.[let add변수]에[_curry()함수를]를 실행한다음 매개변수로 
+```
+function(a,b){
+  return a+b;
+}
+```
+함수를 넣는다.
+
+2.[let add변수]에 넣을 [_curry()함수]가 실행되면서 [_curry함수]의 매개변수 fn로 
+```
+function(a,b){
+  return a+b;
+}
+```
+함수가 들어가있는 상태가 되고
+function(a)이하의 함수
+```
+ return function(a){
+    return function(b){
+      return fn(a,b);
+    }
+  }
+```
+은 모두 return된다.
+
+3.[var add10 = add(10)]으로 add10변수에 함수를 넣게되면
+우선적으로 [add(10)]으로 함수가 실행되게 된다.
+
+[add함수]의 매개변수로 들어간 10이 
+[let add변수]에 들어가있는 [_curry 함수]의 fn매개변수로 들어가게 될것이다.
+
+하지만 여기서 현재 add의 반환값으로 
+function(a)이하의 함수가 반환되어 있는 상태이기 때문에 10은 function(a)의 매개변수로 들어가게 될것이고 function(a)함수가 실행되면서 function(b)함수가 function(a)함수의 값으로 반환되게된다.
+
+※ 이때 10은 function(a)함수의 매개변수로 대기중인 상태이다.
+> #1 image
+
+![34662](https://user-images.githubusercontent.com/33567964/40584121-b7adf3ac-61d6-11e8-815b-04892bd2e776.png)
+
+4.[add10(5)]을 실행하게 된다면,
+현재 [var add10]에는 function(b)가 반환되어 있는 상태이기 때문에
+[function(b) 함수]의 매개변수로 5가 들어가게 되고
+현재 function(a)의값으로 10 function(b)의값으로 5가 들어있는상태에서
+function(b)는 fn(a,b)값을 반환하게된다.
+
+5.이떄 처음의 [_curry함수]의 fn매개변수로 들어가있던
+```
+function(a,b){
+  return a+b;
+}
+```
+함수가 실행되게 될것이며 이때 a와 b값이 각가들어가서
+15를 반환하게 될것이다.
+
+> #2 image
+
+![45845843873](https://user-images.githubusercontent.com/33567964/40584143-3a2f7436-61d7-11e8-8591-a4cc71bec306.png)
+
+클로져의 속성에 따라 스코프체인이 실행 컨택스트로 인해 메모리가 참조되어 종료되지 않고 연결되어 있는 상태로 함수가 반환된 이후에도 호출하여 사용하게 된다.
+
+
+
