@@ -57,3 +57,52 @@ console.log('t4의 값: ',t4)
 console.groupEnd();
 console.groupEnd();
 ```
+
+>결과
+
+![4574574](https://user-images.githubusercontent.com/33567964/40586047-a0aabc4c-61f6-11e8-8549-3c99f982567b.png)
+
+
+## 캡슐화
+
+외부에서 접근할수 없는 변수값, 함수를 실행해야지만 사용 가능함.
+
+```
+var Person= function(arg){
+  var name = arg? arg:'zzoon';
+
+  return{
+    getName : function(){
+      return name;
+    },
+    setName : function(arg){
+      name = arg;
+    }
+  }
+}
+
+var me = Person();
+console.log(me.getName());
+
+var ArrCreate = function(arg){
+  var arr = [1,2,3];
+
+  return {
+    getArr : function(){
+      return arr;
+    }
+  }
+}
+```
+
+함수 내부에서 매개변수가 들어왔을때 내부에서 정의한 var로 값을 넣어준다.
+
+
+그리고 객체를 리턴값으로 반환하여 함수내부의 변수명을 호출함으로써 
+함수를 실행했을때 네임을 가르키게 한다.
+
+외부 접근 불가, 함수를 호출함으로써 name값을 호출
+
+하지만 이렇게되면 Person의 prototype을 이용한 상속 구현이 어렵다.
+
+때문에 아래와 같이 바꿔줄 수 있다.
