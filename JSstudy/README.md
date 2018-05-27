@@ -1,7 +1,7 @@
 # JSstudy note
 
 ## 얇은 복사 깊은 복사
-```
+```javascript
 console.group('shallow copy ex');
 console.group('[String,Boolean,Number]');
 ```
@@ -12,7 +12,7 @@ console.group('[String,Boolean,Number]');
 String, Boolean, Number 데이터는 순수한 값이기 때문에 저장됨. 
 
 -auto deep copy
-```
+```javascript
 let original = '원본';
 let copy = original;
 console.log('copy의 값은?', copy); // 원본
@@ -23,7 +23,7 @@ console.log('copy의 값은?', copy); // 복제품
 console.groupEnd();
 ```
 Object는 조금 다름 JS에서는 문자,불린,넘버,Null 뺴고 모두 Object임 
-```
+```javascript
 console.group('[Object]');
 var t1 = ['원본'];
 console.log('t1 0번 인덱스의 값은?', t1[0]); // 원본
@@ -39,7 +39,7 @@ console.groupEnd();
 ```
 이를 Object마저 deep copy를 해주기 위해선 몇가지 방법이 있다.
 //Array Object내의 slice메서드 를 call 해서 사용
-```
+```javascript
 console.group('deep copy result');
 console.group('[Array]slice,call 활용');
 var t3 = Array.prototype.slice.call(t1);
@@ -67,9 +67,8 @@ console.groupEnd();
 
 외부에서 접근할수 없는 변수값, 함수를 실행해야지만 사용 가능함.
 
-<pre>
-<code>
 
+```javascript
 var Person= function(arg){
   var name = arg? arg:'zzoon';
 
@@ -95,8 +94,7 @@ var ArrCreate = function(arg){
     }
   }
 }
-</code>
-</pre>
+```
 
 함수 내부에서 매개변수가 들어왔을때 내부에서 정의한 var로 값을 넣어준다.
 
