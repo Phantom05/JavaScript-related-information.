@@ -67,7 +67,9 @@ console.groupEnd();
 
 외부에서 접근할수 없는 변수값, 함수를 실행해야지만 사용 가능함.
 
-```
+<pre>
+<code>
+
 var Person= function(arg){
   var name = arg? arg:'zzoon';
 
@@ -93,7 +95,8 @@ var ArrCreate = function(arg){
     }
   }
 }
-```
+</code>
+</pre>
 
 함수 내부에서 매개변수가 들어왔을때 내부에서 정의한 var로 값을 넣어준다.
 
