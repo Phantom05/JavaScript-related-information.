@@ -193,8 +193,8 @@ console.log(gay);
         //디스를 내가 원하는 객체로 명시적으로 지정한다고 생각하셔도 됩니다.
         //call이나 apply는 바로 실행이 되는 반면에 bind는 대기상태로 남아있음.
         
-```
--이해하고 가기-
+```javascript
+//이해하고 가기-
 function HelloFunc(func) {
     this.greeting = 'hello';
   }
@@ -221,8 +221,8 @@ var userFunc = function(greeting) {
 <br>
 
 >Cloure
-```
--이해하고 가기-
+```javascript
+//이해하고 가기-
 var getCompletedStr = (function() {
             var buffAr = [
                 'I am ',
@@ -253,7 +253,7 @@ var getCompletedStr = (function() {
 <br>
 
 >setTimeout && obj[객체 키] = 객체 값 생각하기
-```
+```javascript
 function callLater(obj,a,b){
             return (function(){
                 obj['sum'] = a+b;
@@ -408,8 +408,8 @@ function callLater(obj,a,b){
 
 - 메모리누출
   - target =null
-```
-  스코프가 잡혀있으면 메모리 누출이 일어나게됨. 
+```javascript
+  //스코프가 잡혀있으면 메모리 누출이 일어나게됨. 
     function addHandlerr() {
       let target = document.getElementById('target');
       target.addEventListener('click',function(){
@@ -426,7 +426,7 @@ function callLater(obj,a,b){
 
 
 > 변수 안에 함수를 넣었을경우 구동방식 이해
-```
+```javascript
 function makeAdder(a) {
       console.log("parent'a'", a)
       return function (b) {
@@ -447,7 +447,164 @@ function makeAdder(a) {
 
 ### 2. TEST FOR JAVASCRIPT
 
+1. jQuery로 페이지 인클루드
+```javascript
+      //페이지가 로드되면 실행한다.
+      $(document).ready( function() {
+         $("#header").load("./include/header.html");
+         $("#footer").load("./include/footer.html");
+         //~이렇게 한줄만 해주면 알아서 contents에 testContents.html파일을 넣어 준다.
+      });
+```
+
+2. 식별 팁
+```javascript
+Element.tagName = "";
+Element.id = "";
+Element.className="";  // += 로 추가해야함 그냥쓰면 교체
+Elemnet.classList=""; // 배열형식으로 [i]로 조회가능 여러개일떄
+```
+
+class는 className으로 접근하는것이 좋음
+
+3. 앞뒤로 넣기 세부조정
+```javascript
+.innerText,outerText  = //HTML과는 다르게 
+.insertAdjacentHTML('','')//앞에 속성이 들어간다.
+-beforebegin : //타켓의 바로 앞에서 시작
+-afterbegin :// 타겟 바로 뒤에 시작
+-beforeend : //타겟끝나기 바로앞에 시작
+-afterend  :// 타겟 끝나고 바로뒤에 시작
+```
+
+4. ()()사용하는 이유 -> 함수를 변수에 넣고 그변수를다시 ()하면 내부함수까지 실행됨
+스코프체인, 클로저, 반복문
+```javascript
+    function test(x) {
+      const may = 10;
+      return function () {
+        (may == 10) ? testB(x) : false;
+        return function (e) {
+          return function (e) {
+            for (var i = 0; i < 1; i++) {
+              console.log(e + '단 시작합니다.')
+              for (var j = 1; j < 10; j++) {
+                console.log(e + 'x' + j + '=' + e * j);
+              }
+              console.log(e + '단 끝났습니다.');
+              return testC(e);
+            }
+          }
+        }
+      }
+    }
+    function testB(x) {
+      console.log(x * 5);
+      return;
+    }
+    function testC(y) {
+      let ga = setInterval(() => {
+        y--;
+        console.log('카운트다운: ' + y);
+        (y == 0) ? clearInterval(ga) : false;
+      }, 500);
+
+      setTimeout(() => {
+        console.log('게임을 시작하지');
+        testD(y);
+      }, 6000);
+      return;
+    }
+    function testD(z) {
+      let ar = [];
+      setTimeout(() => {
+        let count = setInterval(() => {
+          z++;
+          ar.push(z);
+          console.log(ar);
+          if (z == 100) {
+            clearInterval(count)
+            testE(ar);
+          }
+        }, 100);
+      }, 500)
+    }
+
+    function testE(z) {
+      let ar = 100;
+      let down = setInterval(() => {
+        ar--;
+        z.pop(ar);
+        console.log(z);
+        (ar == 0) ? clearInterval(down) : false;
+      }, 100)
+
+    }
+
+    let result = test(4)();
+    let second = result(10);
+    second(9);
+```
+5. for in 문
+```javascript
+var obj = {
+	name: "object",
+	age: 10,
+	weight: 5
+}
+var sum = 0;
+for ( ____ in ____ ){
+    if( typeof( ____ ) == "number" ){
+        sum = sum + ____;
+    }
+}
+```
+
+6. shadowing 잘출력되게 해봐라
+```javascript
+function printTimesTable(a){
+	for( i = 1 ; i <= 9 ; i++ ){
+		console.log( a + " * " + i + " = " + a*i );
+	}
+}
+
+for( var i = 2 ; i <= 9 ; i++ ){
+	printTimesTable(i);
+}
+```
+
+7. call 사용
+```javascript
+var numbers = {
+            numberA: 5,
+            numberB: 10,
+            sum: function() {
+                console.log(this === numbers); // => true
+                function calculate() {
+                    console.log(this === numbers); // => true
+                    return this.numberA + this.numberB;
+                }
+                // 문맥을 수정하기 위해 .call() 메소드를 적용
+                return calculate.call(this);
+            }
+        };
 
 
+> var a = { x: 1 };
+> var b = function (y) { console.log(this.x + y); };
+> b.call(a, 1);
+// 2
+> b.apply(a, [1]);
+// 2
+```
 
+8.유사배열 바꿔서 완성 arguments도 이용해보기
+```javascript
+function average(array){
+  //함수를 완성하세요
+}
+
+console.log(average([1,2,3]));
+```
+9.별찍기
 ### 3. PHP
