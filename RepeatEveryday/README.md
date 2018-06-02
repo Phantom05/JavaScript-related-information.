@@ -423,6 +423,27 @@ function callLater(obj,a,b){
     }
     addHandlerr()
 ```
+```js
+//또한 반복문을 사용할때 특정 조건을 부합하면 바로 break를 해주거나 countinue를 이용해서 즉시 루프를 컨트롤 해줘야
+
+for(var i =0; i<10;i++){
+  if(i==5){
+    console.log('Hello');
+    break;
+  }
+}
+//이렇게되면 추가적으로 더 돌지않고 종료되기 때문에 헛도는걸 방지할 수 있다.
+    for (var i = 0; i < 100; i++) {
+      if (i == 5) {
+        console.log('Hello');
+        continue;
+      }
+      if (i == 50) {
+        console.log('7');
+        break;
+      }
+    }
+```
 
 
 > 변수 안에 함수를 넣었을경우 구동방식 이해
@@ -464,8 +485,50 @@ Element.id = "";
 Element.className="";  // += 로 추가해야함 그냥쓰면 교체
 Elemnet.classList=""; // 배열형식으로 [i]로 조회가능 여러개일떄
 ```
-
+>짤막팁
+```
 class는 className으로 접근하는것이 좋음
+
+Symbol 사용해보기, `백틱 ${사용해보기}` 
+
+배열이나 객체에서 마지막 인자에 , 콤마 사용해도 된다.
+
+toString 사용시 객체는 [object object]아무 짝에 쓸모없는걸로 나옴
+
+함수 내부에서 변환되는 값을 함수가 사라지면서 사라지게되고,
+
+객체를 얕은복사로 변수에 넣고 변수 를 객체와 불린값으로 가르키면 false가 나온다
+```
+```js
+let o = {a:1}
+let p = o;
+o.a =2;
+console.log(p);
+// {a:2}
+p === o //true
+o = {a:2};
+p===o //false
+console.log(p);
+// {a:1}
+//새롭게 o에다가 객체를 넣어주므로 참조하는곳이 다르게되어 false가 나온다.
+ 
+
+let q = {a:1};
+console.log(q==={a:1});
+//객체를 가리키는 변수는 그 객체를 가르키고 있을 뿐 객체 자체는 아닙니다.
+//따라서 변수와 객체는 결코 일치하지 않습니다.
+
+//참조 전달을 하므로 함수안에서 객체를 변경하게되면 함수 외부에서도 바뀐다.
+
+function change_o(o){
+  o.a =999;
+}
+
+let o ={a:1};
+change_o(o);
+console.log(o);
+// {a:999}
+```
 
 3. 앞뒤로 넣기 세부조정
 ```javascript
@@ -607,4 +670,5 @@ function average(array){
 console.log(average([1,2,3]));
 ```
 9.별찍기
+10.팝업창.ajax통신,예외처리 JSON
 ### 3. PHP
