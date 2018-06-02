@@ -671,4 +671,122 @@ console.log(average([1,2,3]));
 ```
 9.별찍기
 10.팝업창.ajax통신,예외처리 JSON
+
+10.캡슐화와 프로토타입 상속구현
+
+```js
+    function Rectangle(w,h){
+      var width = w;
+      var height=h;
+
+      //메서드를 선언합니다.
+      this.getWidth = function(){return width;};
+      this.getHeight = function(){return height;};
+      this.setWidth = function(w){
+        if(w<0){
+          throw '길이는 음수일 수 없습니다.';
+        } else{
+          width = w;
+        }
+      };
+
+      this.setHeight = function(h){
+        if(h<0){
+          throw '길이는 음수일 수 없습니다.'
+        }else{
+          height = h;
+        }
+      };
+    }
+
+    Rectangle.prototype.getArea = function(){
+      return this.getWidth() * this.getHeight();
+    };
+
+    var rectangle = new Rectangle(5,7);
+    rectangle.setWidth(2);
+
+
+    console.log('AREA: '+rectangle.getArea());
+
+    function Square(length){
+      this.base = Rectangle;
+      this.base(length,length);
+    }
+
+    Square.prototype = Rectangle.prototype;
+    Square.prototype.constructor = Square;
+    //이렇게 되면 prototype선언으로 Rectangle이 컨스트럭트였는데
+    //자기 자신으로 되면서 완벽하게 Square의 인스턴트가 된다 하지만 Rectangle을 기반으로 프로퍼티와 값들이 들어가있다.
+
+    let abc = new Square(5);
+    console.dir(abc)
+    alert(abc instanceof Rectangle)
+    //하지만 인스턴스는 Rectangle을 가르킨다.
+    //Squre의 인스턴스이지만 생성 당시 Rectangle로부터 만들어진 객체라고 인정하는 것이다.
+    //즉 생성자 함수 Square가 Rectangle을 상속 받았으므로 가능한 일이다.
+```
+
+##게터 세터
+```js
+    class Rectangle {
+      constructor(width, height) {
+        this._width = width;
+        this._height = height;
+      }
+
+      get width() {
+        return this._width;
+      }
+      //rectangle.width 와같이 호출했을때 get을 가져옴
+      
+      set width(input) {
+        this._height = input;
+      }
+      //바로 .width=200 같이 값을 넣는 행위를 했을때 set이 호출됨
+
+      get height() {
+        return this._height;
+      }
+
+      set height(input) {
+        this._width = input;
+      }
+
+      getArea() {
+        return this._width * this._height;
+      }
+    }
+
+    const rectangle = new Rectangle(100, 200);
+    rectangle.width = 200;
+    console.log(rectangle.width);
+    console.log(rectangle.getArea());
+
+//
+    const rectangle = new Rectangle(100, 200);
+    console.log(rectangle.getArea());
+
+    class Square extends Rectangle{
+      constructor(length,height){
+        //부모의 생성자(construct를 호출);
+        super(length,height);
+        //super가 없으면 이 Square로 바인딩 되지 않을 뿐더러 오류를 뿜음.
+        console.log(this.constructor);
+        //class 확장은 생성과 동시에 constructor를 확장자 클래스가 됨. 
+      }
+    }
+
+    let ggg = new Square(100);
+    console.dir(ggg);
+```
+
+```js
+let number =273;
+    number.print = function(){
+      console.log(this)
+    }
+    number.print();
+    //기본 자료형에는 메서드를 추가해도 추가되지 않음
+```
 ### 3. PHP
