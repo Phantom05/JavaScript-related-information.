@@ -1,5 +1,5 @@
 # Functional Programming
->순수함수
+## 순수함수
 ```
 let c = 10;
 function add2(a, b) {
@@ -9,7 +9,7 @@ console.log(add2(10, 10));
 ```
 함수의 원형을 변경시키지 않고 외부로 받은 인자를 새로운 값으로 리턴해주는 것을 순수함수라고 한다 만약 위의 코드에서 return하기 전에 c = b 이렇게 외부의 값을 완전히 바꿔버린다면 이것은 부수효과이며, 순수함수가 아니다.
 
-> 부수효과
+## 부수효과
 ```
 # 1
 let c = 10
@@ -58,7 +58,7 @@ c = 5
   //언제 어디서 실행되도 동일한 값을 내기 때문에 매우 좋음. 매우 안전함
 
 
-  >일급함수
+  ## 일급함수
 ```
 var f1 = function (a) {
       return a * a;
@@ -77,7 +77,7 @@ function f3(f) {
 ```
 //함수를 인자로 넘기게되면 들어가는값에 따라 다르게 나옴.
 
-> /* add maker */
+## /* add maker */
 //함수를 리턴하는 함수
 ```
   function add_maker(a){
@@ -111,7 +111,7 @@ function f3(f) {
 
   moveLeft(dog) //이렇게하는게 함수형 프로그래밍임
 
->함수형 프로그래밍 핵심예제
+## 함수형 프로그래밍 핵심예제
 
 ```
   var user =[
@@ -170,7 +170,7 @@ function f3(f) {
 ```
 
 
-  //2. filter . map으로 리팩토링
+  ## 2. filter . map으로 리팩토링
 ```
   function _filter(list,predi){
       var new_list =[];
@@ -326,7 +326,7 @@ console.log(
 
 
 
->Curry 커링
+## Curry 커링
 ```
 function _curry(fn){
   return function(a){
@@ -395,7 +395,7 @@ function _curry(fn){
 console.log(add(1,2));
 ```
 
->Currying 동작 방법
+## Currying 동작 방법
 
 쉬운 가독성을 위해 ()=> 대신 function()을 사용하였습니다.
 ```
