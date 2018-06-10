@@ -834,4 +834,66 @@ console.log(
 M-y n-a-m-e i-s J-o-h-n
 ```
 
+```js
+const o = {a: 1,b: 2,c: 3,[SYM]: 4};
+
+    for (let prop in o) {
+      if (!o.hasOwnProperty(prop)) continue;
+      console.log(`${prop}: ${o[prop]}`);
+    }
+    //hasOwnProperty 자주 쓰는 습관 들이기!!
+
+    const ora = {apple: 1,xochitl: 2,guitar: 4,xylophone: 5}
+
+    Object.keys(ora)
+      .filter(prop => prop.match(/^x/))
+      .forEach(prop => console.log(`${prop}:${ora[prop]}`))
+    //짤막팁 닷 노테이션사용시 이렇게 내려와서 사용해도됨.
+     /*
+      클래스의 프로토타입에서 데이터 프로퍼티를 수정하는 것은 일반적으로 권장하지 않는다.
+      모든 인스턴트가 클래스 프로토타입을 공유하기는 하지만 만약 인스턴스 중 하나에
+      동일한 이름의 프로퍼티가 있다면 해당 인스턴스는
+      프로토타입이 있는 값이 아니라 인스턴스에 있는 값을 사용하기 때문이다.
+      그래서 인스턴스에 초깃값이 필요하다면 생성자에 만드는 편이 났다.
+    */
+```
+
+```js
+//정적 메소드
+class Car{
+      static getNextVin(){
+        return Car.nextVin++;
+      }
+      constructor(make,model){
+          this.make=make;
+          this.model = model;
+          this.vin = Car.getNextVin();
+        }
+        static areSimilar(car1, car2){
+          return car1.make ===car2.make && car1.model ===car2.model;
+        }
+        static areSame(car1, car2){
+          return car1.vin===car2.vin;
+        }
+    }
+
+    Car.nextVin = 0;
+    console.dir(Car)
+
+    const car1 = new Car("Tesla","S");
+    const car2 = new Car("Mazda","3");
+    const car3 = new Car("Mazda","3");
+
+    console.group('return nextVin for vin');
+    console.log(car1.vin);
+    console.log(car2.vin);
+    console.log(car3.vin);
+    console.groupEnd();
+    console.count('vin end')
+    
+    console.log(Car.areSimilar(car1,car2));
+    console.log(Car.areSimilar(car2,car3));
+    console.log(Car.areSame(car2,car3));
+    console.log(Car.areSame(car2,car2));
+```
 ### 3. PHP
