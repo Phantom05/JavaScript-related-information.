@@ -789,4 +789,49 @@ let number =273;
     number.print();
     //기본 자료형에는 메서드를 추가해도 추가되지 않음
 ```
+
+```js
+//이해하기
+const arr = [{level:5,name:'vue'},{level:7,name:"react"}]
+  console.log('winner: ',arr.filter((x)=>x.level>6).map((x)=>x.name))
+
+  const words = ['Beachball',"Rodeo","Angel","Aardvark","Xylophone","November","Joker","Joke","Bali","Banila","Xcode"];
+  const alpabetical = words.reduce((a,x)=>{
+    if(!a[x[0]]) a[x[0]] =[];
+    a[x[0]].push(x);
+    return a;
+  },{})
+  console.log(alpabetical);
+  //결과
+A:["Angel", "Aardvark"]
+B:["Beachball", "Bali", "Banila"]
+J:["Joker", "Joke"]
+N:["November"]
+R:["Rodeo"]
+X:["Xylophone", "Xcode"]
+```
+
+```js
+배열 뽑아서 수정후 다시 넣기
+function splitAndMerge(str,sp){
+  strList = str.split(" ");
+  for(var i=0; i<strList.length; i++){
+    strList[i] = strList[i].split("").join(sp);
+  }
+  return strList.join(" ");
+}
+
+
+
+function splitAndMerge(str,sp){
+  return str.split(" ").map(word => word.split("").join(sp)).join(" ");
+}
+
+console.log(
+  splitAndMerge("My name is John","-")
+)
+
+M-y n-a-m-e i-s J-o-h-n
+```
+
 ### 3. PHP
