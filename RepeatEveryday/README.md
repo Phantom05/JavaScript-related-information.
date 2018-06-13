@@ -896,4 +896,87 @@ class Car{
     console.log(Car.areSame(car2,car3));
     console.log(Car.areSame(car2,car2));
 ```
+
+```js
+class 인스턴스 활용
+ /* 프로퍼티는 항상 인스턴스에 정의한다. */
+class Vehicle{
+      constructor(){
+        this.passengers =[];
+        console.log('Vehicle created');
+      }
+      addPassenger(p){
+        this.passengers.push(p)
+      }
+      //class 아래 있는 addPassenger 인데, 인스턴스를 생성했을때 __proto__로 연결되어 있어 사용할 수 있음.
+      //프로토 타입과 같이 constructor에 생성되어 있는것임.
+    }
+
+    class Car extends Vehicle{
+      constructor(){
+        super();
+        console.log('Car created');
+      }
+      deplopAirbags(){
+        console.log('BWOOSH!');
+      }
+    }
+
+    const v = new Vehicle();
+    v.addPassenger('Frank');
+    v.addPassenger('Judy');
+    console.log(v.passengers);
+    console.dir(v);
+    const c = new Car();
+    c.addPassenger('Alice');
+    c.addPassenger('Cameron');
+    //인스턴스를 extends로 확장했음. constructor은 Car이나, __proto__는 Vehicle로 연결되어 있음
+    //떄문에 addPassenger을 사용할 수 도 있고, 새로 확장시 정의한 deplopAirbags도  사용할수 있음
+    console.log(c.passengers);
+    console.dir(c);
+    //하지만 되돌아가 v가 deplopAirbags을 사용할 순 없음.
+    // 양방향이였으면 서로 모두 사용 가능 했으나, 단방향이기 때문에 사용할 수 없는것임.
+    console.log(c.deplopAirbags());
+
+    class Motorcycle extends Vehicle{}
+    const d = new Car();
+    const m = new Motorcycle();
+    console.log(
+      d instanceof Car, d instanceof Vehicle, m instanceof Car, m instanceof Vehicle, m instanceof Motorcycle
+    )
+    //여기서 보면 알수 있듯이 m은 확장한 motocycle과 부모클래스인 Vehicle의 인스턴스이긴 하지만, 
+    //Vehicle에서 따로 나온 Car의 인스턴스는 아니다.
+    //또한 모드 객체는 Object의 instance이다.
+
+class Super{
+      constructor(){
+        this.name = 'Super';
+        this.isSuper = true;
+      }
+      abc(){
+        this.name='hello'
+      }
+    }
+    Super.prototype.sneaky = 'not recommended'
+    // 유효하지만, 권장하지는 않는다.
+
+    class Sub extends Super{
+      constructor(){
+        super();
+        this.name='Sub';
+        this.isSub=true
+      }
+    }
+    Sub.prototype.kiki = 'im instance'
+    // 권장함. 하지만 메소드를 정의할때는, 클래스내부에 바로 사용하는게 좋음 이건 예를든것.
+
+      for(let p in obj){
+      console.log(`${p}: ${obj[p]}`+(obj.hasOwnProperty(p)?'':'(inherited)'))
+    }
+    //for in 을 사용하면 prototype까지 모두 나오기 때문에, Object key를 사용하는게 좋음
+    console.dir(obj);
+    console.dir(Super)
+
+    //scss 똑같은거 쓸땐 @extend 근데 수정하면 다바뀜 ㅇㅁㅇ.. mixin이 개꿀이긴함
+```
 ### 3. PHP
