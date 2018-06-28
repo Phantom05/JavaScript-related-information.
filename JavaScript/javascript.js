@@ -136,3 +136,26 @@ for (var i = 2; i <= 9; i++) {
   printTimesTable(i);
 }
 
+  //스크롤 엘리먼트 타겟 후 타켓기준 위치을 넘었을 경우 클래스를 추가해서 사용 
+    document.getElementsByClassName
+    const res = document.getElementById('res')
+    const target = document.getElementById('target');
+    let targetSize = 0;
+    console.log(target.scrollTop)
+    console.log(document.documentElement.scrollTop)
+    
+    const lilist = document.getElementsByTagName('li');
+    window.addEventListener('scroll',function(){
+      console.log(document.documentElement.scrollTop)
+      targetSize =target.offsetTop;
+      windowScroll= document.documentElement.scrollTop
+      if(windowScroll>targetSize-100){
+        for(var i=0;i<lilist.length;i++){
+        lilist[i].classList.add('show')
+      }
+      }else if(windowScroll<targetSize){
+        for(var i=0;i<lilist.length;i++){
+        lilist[i].classList.remove('show')
+      }
+      }
+    })
