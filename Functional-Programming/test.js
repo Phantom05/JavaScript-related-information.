@@ -364,7 +364,7 @@ var sub = _curryr(function(a ,b ){
 
 console.log(sub(10,5));
 var sub5 = sub(5);
-console.log(sub5(10));// 이경우 10에서 5를 빼야하는데 표현이 조금 이상함. 위의 커리함수의경우 왼쪽에서부터 적용해나가는데 이럴때 오른쪽에서 적용하는 curryr 이라는 함수로 적용하는게 좋다.
+console.log(sub5(10));// 이경우 10에서 5를 빼야하는데 표현이 조금 이상 함. 위의 커리함수의경우 왼쪽에서부터 적용해나가는데 이럴때 오른쪽에서 적용하는 curryr 이라는 함수로 적용하는게 좋다.
 
 //2. _get만들어 좀 더 간단하게 하기
 
@@ -377,11 +377,11 @@ console.log(get_name(user1));
 console.log(get_name(users[3]));
 
 
-console.log(
+console.log(                                    
   _map(
     _filter(users,function(user){return user.age >= 30}),
     _get('name')
-  )
+  ),
 );
 
 console.log(
@@ -390,3 +390,22 @@ console.log(
     _get('age')
   )
 );
+
+function __curry(fn){
+  return function(a){
+    return function(b){
+      return fn(a,b)
+    }
+  }
+}
+
+
+var add = __curry(function(a,b){
+  return a+b;
+});
+
+var num5 = add(5);
+console.log(
+  num5(10)
+);
+
