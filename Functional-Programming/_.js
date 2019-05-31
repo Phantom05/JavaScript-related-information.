@@ -16,7 +16,7 @@ function _map(list,mapper) {
   });
   return new_list
 }
- 
+  
 function _each(list,iter,str = 0,len = list.length){
   for (var i = str; i < len; i++) {
     iter(list[i]); 
