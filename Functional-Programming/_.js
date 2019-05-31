@@ -19,7 +19,7 @@ function _map(list,mapper) {
  
 function _each(list,iter,str = 0,len = list.length){
   for (var i = str; i < len; i++) {
-    iter(list[i]);
+    iter(list[i]); 
   }
   return list
 };
