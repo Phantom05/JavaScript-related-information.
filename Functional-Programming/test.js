@@ -404,8 +404,10 @@ var add = __curry(function(a,b){
   return a+b;
 });
 
+
 var num5 = add(5);
 console.log(
   num5(10)
 );
+
 
