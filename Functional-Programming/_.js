@@ -24,13 +24,13 @@ function _each(list,iter,str = 0,len = list.length){
   return list
 };
 
-function _curry(fn){
+function _curry(fn){ 
   return function(a,b){
     return arguments.length == 2
     ? fn(a,b)
     : function(b){ return fn(a,b) }
   }
-}
+}  
 
 function _curryr(fn){
   return function(a,b){
