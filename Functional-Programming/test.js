@@ -45,7 +45,7 @@ function add4(obj, b) {
 console.log(obj1.val);
 add4(obj1, 20)
 console.log(obj1.val);
-
+ 
 // 다시 순수 함수
 // 순수함수는 평가시점이 중요하지 않다.
 var obj1 = {
