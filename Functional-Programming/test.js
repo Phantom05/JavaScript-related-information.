@@ -411,3 +411,8 @@ console.log(
 );
 
 
+var {a:x,b:y} = {a:55 ,b:2};
+console.log(x,y);
+
+var {a:x=1,b:y=20,c:z=30} = {a:2,b:5};
+console.log(x,y,z);
