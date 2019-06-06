@@ -416,3 +416,16 @@ console.log(x,y);
 
 var {a:x=1,b:y=20,c:z=30} = {a:2,b:5};
 console.log(x,y,z);
+
+var zip = new Set();
+zip.add('131-52352');
+zip.add('5543-3462');
+console.log(zip);
+zip.delete('131-52352');
+console.log(zip);
+var zip = new Set(['131-8634',"556-0002"]);
+var iter = zip.keys();
+console.log(iter);
+for(var v of iter) console.log(v);
+var iter = zip.entries();
+console.log(iter);
