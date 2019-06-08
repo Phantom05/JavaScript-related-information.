@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./personal.css">
+  <style>
+    h1 {
+      font-size: 17px;
+      margin: 20px;
+    }
+
+    .js_submenu_on {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>
+    Express
+  </h1>
+
+
+  <ul>
+    <li>Hello</li>
+    <li>Hello</li>
+    <li class="menu_js">Hello</li>
+    <li>Hello</li>
+    <li>Hello</li>
+  </ul>
+  <script>
+
+
+    getEventToggle('.menu_js', (elm) => {
+      elm.classList.add('js_submenu_on');
+      document.title = "hello"
+    }, (elm) => {
+      elm.classList.remove('js_submenu_on');
+      document.title = "world"
+    });
+
+    function getEventToggle(el, inner = false, out = false) {
+      try {
+        let elm = document.querySelector(`${el}`);
+        console.dir(inner);
+        if (inner) {
+          elm.addEventListener('mouseover', function (e) {
+            if (inner) inner(this);
+          })
+        }
+        if (out) {
+          elm.addEventListener('mouseout', function (e) {
+            if (out) out(this);
+          })
+        }
+      } catch (e) {
+        console.log(e.message);
+      }
+      return;
+    }
+
+
+
+
+
+    try {
+      f();
+    } catch (e) {
+      console.log(`예외를 캐치함 -> ${e}`);
+    }
+
+    function f() {
+      g();
+    }
+    function g() {
+      h();
+    }
+    function h() {
+      throw new Error(`오류가 발생했습니다`)
+    }
+
+
+    var a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    try {
+      try {
+        a.forEach(function (v, i, a) {
+          if (i > 5) {
+            throw false;
+          }
+          return a[i] = v * v;
+        })
+      } catch (e) {
+        if (e) throw e;
+      }
+    } catch (e) {
+      console.log(e, 'e');
+    }
+    console.log(a);
+
+    // 패턴 매칭
+    var reg = new RegExp("abc");
+    var reg = /abc/;
+
+    var reg = /cat/;
+    console.log(
+      reg.test("cats and dogs")
+    ); //문자열 안에는 cats가 있기 대문에 일치합니다.
+    console.log(
+      reg.test("Cats")
+    );// Cat의 첫번 째 문자가 대문자이므로 일치하지 않습니다.
+    // test는 정규식이 일치하는지 테스팅하고 true or false를 반환함.
+
+    // exec 메서드는 정규 표현식과 일치하는 문자열을 검색하여 일치한 문자열을 배열로 반환합니다.
+    // 일치하는 문자열을 찾지 못했을때는 null을 반환합니다.
+    var reg = /Script/;
+    var result = reg.exec("JavaScript");
+    console.log(result);
+
+    // 문자 클래스
+    // 문자 클래스는 특정 문자 집합 안의 모든 단일 문자와 일치합니다. 문자 클래스를 정의하려면 문자 집합의 요소가 되는 문자 리터럴을 나열하여 대괄호로 묶어 줍니다. 
+    // []은 문자 개수이며 []이 하나가 있으면 1개의 문자임.
+    console.log(
+      /[0123456789]/.test("10 little indians")
+    );
+
+    // [a-z] 전체 소문자 중 문자 한 개
+    // [abcx-z] // [a][b][c][x][y][z] 중 문자 한개
+
+    var reg = /123/;
+    console.log(
+      reg.test(2436123235)
+    );
+    console.log(
+      /[0-9][0-9][^a-z]/.test(321245 + "as")
+    );
+    console.log(
+      /c.t/.test('cut')
+    );
+    console.clear();
+    // \d는 숫자로 해석할 수 있는 문자 한 개와 일치
+    console.log(
+      /\d\d\d-\d\d\d\d-\d\d\d\d/.test("010-5017-2132sf")
+    );
+    // \w는 모든 영ㅇ ㅓ단어 문자(알파뱃, 숫자, 언더스코어)라는 뜻입니다. 즉, \w는 [a-zA_Z0-9_]의 단축 표기입니다. w는 word character 입니다.
+    console.log(
+      /\w/.test('_')
+    );
+    console.log(
+      /\s/.test(" f")
+    );
+
+    console.log(
+      /[abc]/.test('abc'),'ff'
+    );
+
+    console.log(
+      /<h[1-6]>/.test("<h1>")
+    );
+
+    console.log(
+      /c.+t/.test('cuegwegwegft')
+    );
+
+    console.log(
+      /\d\d\d-\d\d\d/.test('124-124')
+    );
+
+    console.log(
+      /\d{4}-\d{2}-\d{2} \d{2}:\d{2}/.test('2016-05-03 24:34')
+    );
+
+    // ?는 바로 앞의 요소를 최소 0번, 최대 한번 반복합니다. 이는 {0,1}와 같습니다.
+    // +는 최소 한번 이상 반복.
+    // *은 바로 앞의 요소를 최소 0번이상 반복.
+
+      console.log(
+        /\d{3,4}-/.test("12342-")
+      );
+      console.log(
+        /Java.*/.test("Java script")
+      );
+
+      console.log(
+        "000012".match(/0*?1/)
+      );
+  
+        var bark = /bow+(woo+f)+/;
+        console.log(
+          bark.test("bowwoofwoofwooofwoooof")
+        );
+
+        var bark = /(oh+)~mygod/;
+        bark.test('ohhhhhhhhhhhhhhhh~mygod');
+        console.log(
+          
+        );
+
+
+        // \1 \2 이런건 그룹된걸 그대로 가져오게됨.
+        var header = /<(h[1-6])>(wow).*\2<\/\1>/;
+        console.log(
+          header.exec("<h3>wowwegwegwow</h3>"),'f'
+        );
+
+        var jsFirst = /^Javascript/;
+        console.log(
+          jsFirst.test("Javascript is powerful")
+        );
+        console.log(
+          jsFirst.test('i love Javascipr')
+        );
+
+        // ^은 첫번째 $은 마지막
+
+        var jsLast = /JavaScript$/;
+        console.log(
+          jsLast.test("hello world JavaScript")
+        );
+
+        var phone = /^\d{2,3}-\d{4}-\d{4}$/;
+        console.log(
+          phone.test("010-4122-1243")
+        );
+
+        // \b가있으면 맨앞이나 뒤에 스페이스가 없어도 찾아낼 수 있다.
+        // 하지만 /\scat\s/ 이런식으로 되면 맨앞이나 뒤에 스페이스가 업식 때문에 찾을 수 없다.
+        console.log(
+          /\bcat\b/.exec("cat I like cat and dog")
+        );
+        // \B는 영어 단어 경계 외의 위치에 일치합니다.
+        console.log(
+          /\Bdog/.test("Bullfdog")
+        );
+
+        console.log(
+          /Java(?=Script)/.exec("I like JavaScript")
+        );
+        console.log(
+          /Java(?=Script)/.exec("I like JavaCoffee")
+        );
+        console.log(
+          /Java(?!Script)/.exec("I like JavaScript")
+        );
+        console.log(
+          /Java(?!Script)/.exec("I like JavaCoffee")
+        );
+
+        var animal = /apple|peach|orange/;
+        console.log(
+          animal.test("peach"),'d'
+        );
+
+        var countFruits = /\b(\d+) (apple|peach|orange)s?\b/;
+        var result = countFruits.exec("10 apple");
+        console.log(result);
+
+        console.log(
+          animal.test("orange"),'true'
+        );
+
+
+        var s = "1 little, 2 little indian";
+        console.log(s.search(/little/));
+        console.log(s.search(/\d/));
+        console.log(s.search(/bindian/));
+        
+
+        var s= "1 little,2 little indian";
+        console.log(s.replace(/indian/,"boy"));
+        console.log(s.replace(/little/,"big"));
+        console.log(s.replace(/little/g,"big"));
+
+        var person = "Tim, tom@example.com, 010-1234-5678";
+        var result= person.replace(/0(\d{1,4}-\d{1,4}-\d{4})/g,"+82-$1");
+        console.log(result);
+
+        var date = "오늘은 2016년9월10일 입니다.";
+        var result = date.replace(/(\d+)년(\d+)월(\d+)일/,"$1/$2/$3");
+        console.log(result);
+
+        var name = "Tom Sawyer";
+        var result = name.replace(/(\w+)\s(\w+)/,"$2 $1");
+        console.log(result);
+
+        var address ="123-842 서울특별시 마포구 월드컵로10길 56";
+        var result = address.replace(/\d{3}-\d{3}/,"우$&");
+        console.log(result);
+
+        var text = "투명 드래곤이 [뭐라뭐라]하고 울부 짖었다";
+        var new_text = text.replace(/뭐라뭐라/g,function(match){
+          console.log(match);
+          return "heloo"
+        });
+        console.log(new_text);
+
+        console.log(
+          "1 little,2 little indian".match(/\d+/g)
+        );
+
+
+        var text = "뭐라..11시 퇴근이라고..??ㅠㅠ";
+        console.log(
+          text.replace(/.+(\d\d시).+/,"6시 정각 퇴근!")
+        );
+
+        var url = /\b(\w+):\/{2}([\w.]+)(\/\S*)?\b/;
+        var text = "Tom의 홈페이지 URL은 https://www.example.com/~tom 입니다.";
+        console.log(text.match(url));
+
+        console.log("172.20.51.65".split("."));
+
+        var names = " Tom Sawyer ; Huckleberry Finn ;Becky Thatcher ";
+        var list = names.replace(/(^\s*|\s*$)/g,"").split(/\s*;\s*/);
+        console.log(list);
+
+        console.log("1 little,2 little indian".split(/\s*(\d)\s*/));
+        console.log("1,2,3,4,5".split(",",2));
+        console.log("\uDC00");
+        console.log(/^.$/.exec('☕'));
+
+        var tel = /(\d{2,5})-(\d{1,4})-(\d{4})/g;
+        var text = "Tom: 010-1234-5667\nHuck: 020-123-1533\nBecky: 030-235-3463";
+        console.log(tel.lastIndex);
+        console.log(tel.exec(text));
+        console.log(tel.lastIndex);
+        console.log(tel.exec(text));
+        console.log(tel.lastIndex = 0);
+        console.log(tel.exec(text));
+
+        var tel = /(\d{2,5})-(\d{1,4})-(\d{4})/yg;
+        var text = "Tom: 010-1234-5667\nHuck: 020-123-1533\nBecky: 030-235-3463";
+
+        console.log(tel.exec(text));
+        // while((result = tel.exec(text)) != null){
+        //   console.log(result[0],result[1],result[2],result[3]);
+        // }
+
+
+        var reg = /우(\d{3})-(\d{3})/;
+        var copy = new RegExp(reg,"gi");
+        var text ="우122-412우222-412";
+        console.log(
+          copy.exec(text),copy.exec(text)
+        );
+
+  </script>
+</body>
+
+</html>
