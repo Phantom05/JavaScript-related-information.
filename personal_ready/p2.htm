@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <button id="open">Open</button>
+  <button id="close">Close</button>
+
+  <button id="size">Size</button>
+  <script>
+    var w;
+    document.getElementById('open').addEventListener('click', function (e) {
+      w = open('./newpage.htm','new page','width=400, height=300');
+      w.document.body.style.background = "green"
+    })
+
+    document.getElementById('size').addEventListener('click', function (e) {
+      w.moveBy(10,20)
+    })
+
+    document.getElementById('close').addEventListener('click', function (e) {
+      if(w) w.close();
+    })
+
+    setInterval(() => {
+      console.log('아아악!!!');
+    }, 500);
+  </script>
+</body>
+
+</html>
