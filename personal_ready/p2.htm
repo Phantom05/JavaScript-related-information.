@@ -12,8 +12,15 @@
 
   <button id="open">Open</button>
   <button id="close">Close</button>
-
+     f                        g
   <button id="size">Size</button>
+
+  <form action="" id="wow"></form>
+
+  <div>
+    <p class="important">Document Object Model의</p> 줄임말입니다.
+    <span>ㅋㅋ</span>
+  </div>
   <script>
     var w;
     document.getElementById('open').addEventListener('click', function (e) {
@@ -32,6 +39,44 @@
     setInterval(() => {
       console.log('아아악!!!');
     }, 500);
+
+
+    console.log(
+      document.body.firstElementChild
+    );
+
+    console.log(document.constructor);
+    console.log(document.nodeName,document.nodeValue,document.nodeType);
+
+
+    var divs = document.getElementsByTagName("div");
+    var firstDiv =  divs[0].getElementsByTagName("p");
+    console.log(firstDiv);
+
+    var buttons = document.getElementsByTagName('button');
+    console.log(buttons);
+    // var staticList = Array.prototype.slice.call(buttons,0);
+    // staticList.map(x=>{
+    //   console.log(x);
+    // })
+
+     fakeToNode(buttons).map(x=>{
+       console.log(x);
+     }) 
+
+    function fakeToNode(target){
+      return Array.prototype.slice.call(target,0)
+    }
+
+    console.log(
+      document.forms
+    );
+
+    document.querySelectorAll('button').map(x=>{
+      console.log(x);
+    })
+
+
   </script>
 </body>
 
