@@ -64,3 +64,31 @@ bloddTypes.forEach((type,idx)=>{
 });
 form.appendChild(select);
 document.body.appendChild(form)
+
+
+console.log(
+  document.getElementById('doglist').getBoundingClientRect()
+);
+
+
+function getFocusInOut (el, focusin = false, focusout = false) {
+  try {
+    let elm = document.querySelector(`${el}`);
+    elm.addEventListener('focusin', function (e) {
+      if (focusin) {
+        focusin(this)
+      }
+    })
+    elm.addEventListener('focusout', function (e) {
+      if (focusout) {
+        focusout(this)
+      }
+    })
+  } catch (e) {
+    console.log(e.message);
+  }
+  return;
+}
+
+
+

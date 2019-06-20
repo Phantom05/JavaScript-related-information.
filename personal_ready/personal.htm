@@ -573,7 +573,21 @@ console.log(screen);
 console.dir(window.document);
 
 
+
+  function getScrollTop(){
+    if(window.pageYOffset !== undefined){
+      return window.pageYOffset;
+    }else{
+      return document.documentElement.scrollTop || document.body.scrollTop;
+    }
+  }
+
   </script>
+  <style>
+    body{
+      height: 2000px;
+    }
+  </style>
   <script>
   
   </script>
