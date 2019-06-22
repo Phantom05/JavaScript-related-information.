@@ -310,9 +310,93 @@ box.style.cursor = "pointer";
 
 box.addEventListener('mousedown', function mouseDownListener(e){
   document.addEventListener('mousemove', mouseDownListener, false);
+  boxOffsetX = e.offsetX;
+  boxOffsetY = e.offsetY;
+},false);
+
+document.addEventListener('mouseup', function mouseUpListener(e){
+  document.removeEventListener("mousemove", mouseMoveListener,false);
 },false)
 
 function mouseMoveListener(e){
   box.style.left = e.pageX - boxOffsetX + "px";
   box.style.top = e.pageY - boxOffsetY + "px";
 }
+
+
+
+var outer = document.getElementById('outer');
+var inner2 = document.getElementById('inner2');
+outer.addEventListener('click',function(e){
+  console.log(e.isTrusted);
+  console.log('outer bubbling');
+},false);
+outer.addEventListener('click',function(e){
+  console.log('outer capturing');
+},true);
+inner2.addEventListener('click',function(e){
+  console.log('inner2 bubbling (1)');
+  e.stopImmediatePropagation()
+},false);
+inner2.addEventListener('click',function(e){
+  console.log('inner2 bubbling (2)');
+},false);
+
+
+
+function Person(name){
+  this.name = name;
+}
+
+Person.prototype.sayHello = function(){
+  console.log(this);
+  console.log(`Hello! ${this.name}`);
+}
+
+var person = new Person("Tom");
+var button = document.getElementById('button');
+button.addEventListener('click', person.sayHello.bind(person), false)
+
+
+document.getElementById('button2').addEventListener('click',fooo.bind({name:"world"})(5),false);
+
+function fooo(data){
+  console.log(data);
+  let that = this;
+  return function(e){
+    console.log(e,'in',that);
+  }
+}
+
+function Person(name){
+  this.name = name;
+  this.sayHello = ()=>{
+    console.log('hello!'+ this.name); // 생성자
+  }
+}
+
+var person = new Person('Tom');
+console.log(person);
+console.log(person.sayHello());
+
+
+function Person(name){
+  this.name = name;
+}
+Person.prototype.handleEvent = function(){
+  console.log('hello!'+this.name);
+}
+var person = new Person("Tom");
+var button = document.getElementById('ddd');
+console.log(person);
+button.addEventListener('click',person,false);
+
+
+
+// 호환성을 위해서, 함수가 아닌 `handleEvent` 속성을 가진 오브젝트도
+// 똑같이 처리됩니다.
+buttonElement.addEventListener('click', {
+  handleEvent: function (event) {
+    alert('handleEvent 함수로 누름!');
+  }
+});
