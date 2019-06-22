@@ -399,4 +399,4 @@ buttonElement.addEventListener('click', {
   handleEvent: function (event) {
     alert('handleEvent 함수로 누름!');
   }
-});
+}); 
