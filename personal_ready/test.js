@@ -400,3 +400,16 @@ buttonElement.addEventListener('click', {
     alert('handleEvent 함수로 누름!');
   }
 }); 
+
+
+console.clear();
+
+function Person(name){
+  this.name = name;
+}
+Person.prototype.handleEvent = function(){
+  console.log(`hello ! ${this.name}`);
+}
+var person = new Person("Tom");
+var button = document.getElementById('button');
+button.addEventListener('click',person,false);
