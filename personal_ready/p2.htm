@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <button id="open">Open</button>
+  <button id="close">Close</button>
+     f                        g
+  <button id="size">Size</button>
+
+  <form action="" id="wow"></form>
+
+  <div>
+    <p class="important">Document Object Model의</p> 줄임말입니다.
+    <span>ㅋㅋ</span>
+  </div>
+  <script>
+    var w;
+    document.getElementById('open').addEventListener('click', function (e) {
+      w = open('./newpage.htm','new page','width=400, height=300');
+      w.document.body.style.background = "green"
+    })
+
+    document.getElementById('size').addEventListener('click', function (e) {
+      w.moveBy(10,20)
+    })
+
+    document.getElementById('close').addEventListener('click', function (e) {
+      if(w) w.close();
+    })
+
+    setInterval(() => {
+      console.log('아아악!!!');
+    }, 500);
+
+
+    console.log(
+      document.body.firstElementChild
+    );
+
+    console.log(document.constructor);
+    console.log(document.nodeName,document.nodeValue,document.nodeType);
+
+
+    var divs = document.getElementsByTagName("div");
+    var firstDiv =  divs[0].getElementsByTagName("p");
+    console.log(firstDiv);
+
+    var buttons = document.getElementsByTagName('button');
+    console.log(buttons);
+    // var staticList = Array.prototype.slice.call(buttons,0);
+    // staticList.map(x=>{
+    //   console.log(x);
+    // })
+
+     fakeToNode(buttons).map(x=>{
+       console.log(x);
+     }) 
+
+    function fakeToNode(target){
+      return Array.prototype.slice.call(target,0)
+    }
+
+    console.log(
+      document.forms
+    );
+
+    document.querySelectorAll('button').map(x=>{
+      console.log(x);
+    })
+
+    
+
+  </script>
+</body>
+
+</html>

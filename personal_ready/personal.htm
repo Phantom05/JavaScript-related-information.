@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Dofcument</title>
+  <link rel="stylesheet" href="./personal.css">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
+  <script src="https://momentjs.com/downloads/moment-timezone-with-data-10-year-range.min.js"></script>
+  <style>
+    h1 {
+      font-size: 17px;
+      margin: 20px;
+    }
+
+    .js_submenu_on {
+      color: red;
+    }
+
+    body {
+      height: 2000px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>
+    Express
+  </h1>
+
+
+  <ul>
+    <li>Hello</li>
+    <li>Hello</li>
+    <li class="menu_js">Hello</li>
+    <li>Hello</li>
+    <li>Hello</li>
+  </ul>
+  <script>
+
+
+    getEventToggle('.menu_js', (elm) => {
+      elm.classList.add('js_submenu_on');
+      document.title = "hello"
+    }, (elm) => {
+      elm.classList.remove('js_submenu_on');
+      document.title = "world"
+    });
+
+    function getEventToggle(el, inner = false, out = false) {
+      try {
+        let elm = document.querySelector(`${el}`);
+        console.dir(inner);
+        if (inner) {
+          elm.addEventListener('mouseover', function (e) {
+            if (inner) inner(this);
+          })
+        }
+        if (out) {
+          elm.addEventListener('mouseout', function (e) {
+            if (out) out(this);
+          })
+        }
+      } catch (e) {
+        console.log(e.message);
+      }
+      return;
+    }
+
+
+
+
+
+    try {
+      f();
+    } catch (e) {
+      console.log(`예외를 캐치함 -> ${e}`);
+    }
+
+    function f() {
+      g();
+    }
+    function g() {
+      h();
+    }
+    function h() {
+      throw new Error(`오류가 발생했습니다`)
+    }
+
+
+    var a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    try {
+      try {
+        a.forEach(function (v, i, a) {
+          if (i > 5) {
+            throw false;
+          }
+          return a[i] = v * v;
+        })
+      } catch (e) {
+        if (e) throw e;
+      }
+    } catch (e) {
+      console.log(e, 'e');
+    }
+    console.log(a);
+
+    // 패턴 매칭
+    var reg = new RegExp("abc");
+    var reg = /abc/;
+
+    var reg = /cat/;
+    console.log(
+      reg.test("cats and dogs")
+    ); //문자열 안에는 cats가 있기 대문에 일치합니다.
+    console.log(
+      reg.test("Cats")
+    );// Cat의 첫번 째 문자가 대문자이므로 일치하지 않습니다.
+    // test는 정규식이 일치하는지 테스팅하고 true or false를 반환함.
+
+    // exec 메서드는 정규 표현식과 일치하는 문자열을 검색하여 일치한 문자열을 배열로 반환합니다.
+    // 일치하는 문자열을 찾지 못했을때는 null을 반환합니다.
+    var reg = /Script/;
+    var result = reg.exec("JavaScript");
+    console.log(result);
+
+    // 문자 클래스
+    // 문자 클래스는 특정 문자 집합 안의 모든 단일 문자와 일치합니다. 문자 클래스를 정의하려면 문자 집합의 요소가 되는 문자 리터럴을 나열하여 대괄호로 묶어 줍니다. 
+    // []은 문자 개수이며 []이 하나가 있으면 1개의 문자임.
+    console.log(
+      /[0123456789]/.test("10 little indians")
+    );
+
+    // [a-z] 전체 소문자 중 문자 한 개
+    // [abcx-z] // [a][b][c][x][y][z] 중 문자 한개
+
+    var reg = /123/;
+    console.log(
+      reg.test(2436123235)
+    );
+    console.log(
+      /[0-9][0-9][^a-z]/.test(321245 + "as")
+    );
+    console.log(
+      /c.t/.test('cut')
+    );
+    console.clear();
+    // \d는 숫자로 해석할 수 있는 문자 한 개와 일치
+    console.log(
+      /\d\d\d-\d\d\d\d-\d\d\d\d/.test("010-5017-2132sf")
+    );
+    // \w는 모든 영ㅇ ㅓ단어 문자(알파뱃, 숫자, 언더스코어)라는 뜻입니다. 즉, \w는 [a-zA_Z0-9_]의 단축 표기입니다. w는 word character 입니다.
+    console.log(
+      /\w/.test('_')
+    );
+    console.log(
+      /\s/.test(" f")
+    );
+
+    console.log(
+      /[abc]/.test('abc'), 'ff'
+    );
+
+    console.log(
+      /<h[1-6]>/.test("<h1>")
+    );
+
+    console.log(
+      /c.+t/.test('cuegwegwegft')
+    );
+
+    console.log(
+      /\d\d\d-\d\d\d/.test('124-124')
+    );
+
+    console.log(
+      /\d{4}-\d{2}-\d{2} \d{2}:\d{2}/.test('2016-05-03 24:34')
+    );
+
+    // ?는 바로 앞의 요소를 최소 0번, 최대 한번 반복합니다. 이는 {0,1}와 같습니다.
+    // +는 최소 한번 이상 반복.
+    // *은 바로 앞의 요소를 최소 0번이상 반복.
+
+    console.log(
+      /\d{3,4}-/.test("12342-")
+    );
+    console.log(
+      /Java.*/.test("Java script")
+    );
+
+    console.log(
+      "000012".match(/0*?1/)
+    );
+
+    var bark = /bow+(woo+f)+/;
+    console.log(
+      bark.test("bowwoofwoofwooofwoooof")
+    );
+
+    var bark = /(oh+)~mygod/;
+    bark.test('ohhhhhhhhhhhhhhhh~mygod');
+    console.log(
+
+    );
+
+
+    // \1 \2 이런건 그룹된걸 그대로 가져오게됨.
+    var header = /<(h[1-6])>(wow).*\2<\/\1>/;
+    console.log(
+      header.exec("<h3>wowwegwegwow</h3>"), 'f'
+    );
+
+    var jsFirst = /^Javascript/;
+    console.log(
+      jsFirst.test("Javascript is powerful")
+    );
+    console.log(
+      jsFirst.test('i love Javascipr')
+    );
+
+    // ^은 첫번째 $은 마지막
+
+    var jsLast = /JavaScript$/;
+    console.log(
+      jsLast.test("hello world JavaScript")
+    );
+
+    var phone = /^\d{2,3}-\d{4}-\d{4}$/;
+    console.log(
+      phone.test("010-4122-1243")
+    );
+
+    // \b가있으면 맨앞이나 뒤에 스페이스가 없어도 찾아낼 수 있다.
+    // 하지만 /\scat\s/ 이런식으로 되면 맨앞이나 뒤에 스페이스가 업식 때문에 찾을 수 없다.
+    console.log(
+      /\bcat\b/.exec("cat I like cat and dog")
+    );
+    // \B는 영어 단어 경계 외의 위치에 일치합니다.
+    console.log(
+      /\Bdog/.test("Bullfdog")
+    );
+
+    console.log(
+      /Java(?=Script)/.exec("I like JavaScript")
+    );
+    console.log(
+      /Java(?=Script)/.exec("I like JavaCoffee")
+    );
+    console.log(
+      /Java(?!Script)/.exec("I like JavaScript")
+    );
+    console.log(
+      /Java(?!Script)/.exec("I like JavaCoffee")
+    );
+
+    var animal = /apple|peach|orange/;
+    console.log(
+      animal.test("peach"), 'd'
+    );
+
+    var countFruits = /\b(\d+) (apple|peach|orange)s?\b/;
+    var result = countFruits.exec("10 apple");
+    console.log(result);
+
+    console.log(
+      animal.test("orange"), 'true'
+    );
+
+
+    var s = "1 little, 2 little indian";
+    console.log(s.search(/little/));
+    console.log(s.search(/\d/));
+    console.log(s.search(/bindian/));
+
+
+    var s = "1 little,2 little indian";
+    console.log(s.replace(/indian/, "boy"));
+    console.log(s.replace(/little/, "big"));
+    console.log(s.replace(/little/g, "big"));
+
+    var person = "Tim, tom@example.com, 010-1234-5678";
+    var result = person.replace(/0(\d{1,4}-\d{1,4}-\d{4})/g, "+82-$1");
+    console.log(result);
+
+    var date = "오늘은 2016년9월10일 입니다.";
+    var result = date.replace(/(\d+)년(\d+)월(\d+)일/, "$1/$2/$3");
+    console.log(result);
+
+    var name = "Tom Sawyer";
+    var result = name.replace(/(\w+)\s(\w+)/, "$2 $1");
+    console.log(result);
+
+    var address = "123-842 서울특별시 마포구 월드컵로10길 56";
+    var result = address.replace(/\d{3}-\d{3}/, "우$&");
+    console.log(result);
+
+    var text = "투명 드래곤이 [뭐라뭐라]하고 울부 짖었다";
+    var new_text = text.replace(/뭐라뭐라/g, function (match) {
+      console.log(match);
+      return "heloo"
+    });
+    console.log(new_text);
+
+    console.log(
+      "1 little,2 little indian".match(/\d+/g)
+    );
+
+
+    var text = "뭐라..11시 퇴근이라고..??ㅠㅠ";
+    console.log(
+      text.replace(/.+(\d\d시).+/, "6시 정각 퇴근!")
+    );
+
+    var url = /\b(\w+):\/{2}([\w.]+)(\/\S*)?\b/;
+    var text = "Tom의 홈페이지 URL은 https://www.example.com/~tom 입니다.";
+    console.log(text.match(url));
+
+    console.log("172.20.51.65".split("."));
+
+    var names = " Tom Sawyer ; Huckleberry Finn ;Becky Thatcher ";
+    var list = names.replace(/(^\s*|\s*$)/g, "").split(/\s*;\s*/);
+    console.log(list);
+
+    console.log("1 little,2 little indian".split(/\s*(\d)\s*/));
+    console.log("1,2,3,4,5".split(",", 2));
+    console.log("\uDC00");
+    console.log(/^.$/.exec('☕'));
+
+    var tel = /(\d{2,5})-(\d{1,4})-(\d{4})/g;
+    var text = "Tom: 010-1234-5667\nHuck: 020-123-1533\nBecky: 030-235-3463";
+    console.log(tel.lastIndex);
+    console.log(tel.exec(text));
+    console.log(tel.lastIndex);
+    console.log(tel.exec(text));
+    console.log(tel.lastIndex = 0);
+    console.log(tel.exec(text));
+
+    var tel = /(\d{2,5})-(\d{1,4})-(\d{4})/yg;
+    var text = "Tom: 010-1234-5667\nHuck: 020-123-1533\nBecky: 030-235-3463";
+
+    console.log(tel.exec(text));
+    // while((result = tel.exec(text)) != null){
+    //   console.log(result[0],result[1],result[2],result[3]);
+    // }
+
+
+    var reg = /우(\d{3})-(\d{3})/;
+    var copy = new RegExp(reg, "gi");
+    var text = "우122-412우222-412";
+    console.log(
+      copy.exec(text), copy.exec(text)
+    );
+
+
+    console.clear();
+    // 웹 브라우저로 웹 페이지를 열면 가장 먼저 Window 객체가 생성됩니다. Window 객체는 웹 페이지의 전역 객체로 웹 페이지와 탭마다 생성됩니다.
+    // Document 객체는 ready State 프로퍼티를 가지고 있으며, 이 프로퍼티에는 HTML문서와 해석 상태를 뜻하는 문자열이 저장됩니다. readyState 프로퍼티의 초깃값은 "loading"이라는 문자열입니다.
+    // HTML문서는 HTML구문을 작성 순서에 따라 분석하며 Document 객체 요소와 텍스트 노드를 추가해 나갑니다.
+    // HTML 문서 안에 script 요소가 있으면 script 요소 안에 코드 또는 외부 파일에 저장된 코드의 구문을 분석합니다. 그 결과 오류가 발생하지 않으면 그 시점에 코드를 실행합니다. 이때 script요소는 동기적으로 실행됩니다. 즉, script요소의 구문을 분석해서 실행할때는 HRTML문서의 구문 분석이 일시적으로 막히고 자바스크립트 코드의 실행을 완료한 후에는 일시적으로 막혀 있던 HTML문서의 구문 분석을 재개합니다.
+    //HTML문서의 모든 내용을 읽은 후에 DOM 트리 구축을 완료하면 document.readyState 프로퍼티값이 "interactive"로 바뀝니다.
+    // 웹 브라우저는 Document 객체에 DOM 트리 구축 완료를 알리기 위해 DOMContentLoaded 이벤트를 발생시킵니다.
+    //img 등의 요소가 이미지 파일 등의 외부 리소스를 읽어 들여야 한다면 이 시점에 읽어 들입니다.
+    // 모든 리소스를 읽어 들인 후 document.readytState 값이 complete로 바뀝니다. 마지막으로 웹 브라우저는 window객체를 상대로 load 이벤트를 발생시킵니다.
+    // 이시점부터 다양한 이벤트를 수신하며 이벤트가 발생하면 이벤트 처리기가 비동기로 호출됩니다.
+
+    // window.addEventListener('load', function (e) {
+    //   console.log('hgello');
+    // });
+
+
+
+
+
+  </script>
+  <!-- 비동기 -->
+  <script async src="./personal.js"></script>
+  <!-- 이렇게하면 DOM모두 로딩 후 실행됨 DOMContentLoaded랑 같은거임. -->
+  <script defer src="./personal.js"></script>
+  <script>
+    //허나 async랑 defer에 document.write메서드가 있으면 둘다 무시되고 동기적으로 실행됨. 이 async랑 defer를 지원하지 않는 브라우저도 동기적으로 실행됨.
+
+    console.log(top);
+
+    function number_range(value) {
+      let hash_range = { 2: "11~20", 3: "21~30", 4: "31~40", 5: "41~50", 6: "51~60", 7: "61~70" };
+      let hash_range_key = Math.ceil(value / 10);
+      if (hash_range[hash_range_key]) {
+        return hash_range[hash_range_key];
+      }
+      if (value <= 10) {
+        return "~10";
+      }
+      return "71~";
+    }
+
+    window.addEventListener('scroll', function (e) {
+      console.log(
+        window.scrollY
+      );
+    })
+    console.log(
+      number_range(42)
+    )
+
+
+    function HttpRequest(target, data, success_callback, fail_callback) {
+      this.target = target;   //요청을 보낼 서버 주소
+      this.data = data;       //Post 요청에 보낼 데이터
+      this.success = success_callback;    //HTTP 요청 성공시 호출할 콜백 함수
+      this.failure = fail_callback;        //HTTP 요청 실패시 호출할 콜백 함수
+
+      this.sendPost = function () {
+        $.ajax({
+          url: this.target,
+          type: "POST",
+          data: this.data,
+          success: this.success,
+          error: this.failure
+        });
+      }
+    }
+
+    var target = "target URL";
+    var data = { "order_by": "New", "place_type": "주거" }; //POST 요청에 포함시킬 데이터 값. 필드이름 : 값 
+    var success = function (data, status, response) {
+      var parsed_data = JSON.parse(data); //서버로부터 받은 데이터를 분해한다 
+      var result_code = parsed_data["result_code"]["major_code"]; //데이터가 제대로 왔는지 응답값을 확인한다 
+      if (result_code == "SUCCESS") //값이 제대로 왔을 경우 
+      {
+        var estimate_data = parsed_data["return_data"]; load_data_on_target(estimate_data, $('#residential')); //주거용 탭에 데이터를 불러온다 
+      }
+      else {
+        alert("서버로부터 데이터를 읽는데 실패했습니다.");
+      }
+    };
+    var fail = function (response, status, error) {
+      alert(error);
+    };
+    var http = new HttpRequest(target, data, success, fail); //메인 페이지의 HttpRequest 클래스 사용 
+    console.log(http);
+    // http.sendPost();
+
+
+    // https://api.bithumb.com/public/ticker/btc
+
+
+
+
+
+    function httpAxios1(configObj) {
+      this.config = configObj;
+      this.send = function (success_fn, fail_fn) {
+        return axios(this.config)
+          .then(function (response) {
+            success_fn(response)
+          }).catch(function (err) {
+            fail_fn(err)
+          })
+      }
+    }
+
+    const axiosConfigObj1 = {
+      method: 'get',
+      url: 'https://api.bithumb.com/public/ticker/btc'
+    }
+    // let testingHttp = new httpAxios1(axiosConfigObj1);
+    // testingHttp.send(
+    // (data)=>{
+    //   console.log(data);
+    // }, (data) => {
+    //   console.log(data);
+    // })
+
+
+    // httpAxios2({configObj, successFn, failFn}) // 이런식으로 비구조화를 섞어보는건 어떨가 싶네요. by 하민
+    function httpAxios2(configObj, success_fn, fail_fn) {
+      axios(configObj)
+        .then(function (response) {
+          success_fn(response)
+        }).catch(function (err) {
+          fail_fn(err)
+        })
+    }
+    const axiosConfigObj2 = {
+      method: 'get',
+      url: 'https://api.bithumb.com/public/ticker/btc'
+    }
+
+    // httpAxios2(axiosConfigObj2,
+    //   (data) => {
+    //     console.log(data);
+    //   }, (data) => {
+    //     console.log(data);
+    //   })
+
+
+      // console.log(window.location.hash = "#header");
+
+      console.log(window.search = "some data");
+
+
+      console.log(window.history);
+
+      눼=({today})=> `눼.. 오늘도 ${today} 까지..`;
+      console.log(
+        눼({today:"3am"})
+      );
+
+
+      그럼이만= ({work,ment:우울}) => work + 우울;
+
+      console.log(
+        그럼이만({work:"일하러...",ment:"잘자요.."})
+      ); 
+      console.dir(
+        Navigator
+      );
+      console.log(
+        Navigator.appCodeName
+      );
+      console.dir(
+        window.navigator
+      );
+
+
+// var _utc = new Date()
+// var _gmt = new Date();  // GMT시간
+
+//   function getGmtToUtc(_gmt){
+//     new Date(_gmt.getTime() + (_gmt.getTimezoneOffset() * 60000)); 
+//     return 
+//   }
+
+console.clear();
+
+console.log();
+function momentNewDate() {
+  let date = new Date()
+	var ny=  moment(date).tz("America/New_York").format('YYYY-MM-DD HH:mm:ss');
+  var ko = moment(date).tz("Asia/Seoul").format('YYYY-MM-DD HH:mm:ss');
+  var ur = moment(date).tz("Europe/Paris").format('YYYY-MM-DD HH:mm:ss');
+
+  console.log(ny);
+  console.log(ko);
+  console.log(ur);
+  
+	// nowDate = new Date(nowDate);
+	// return nowDate;
+}
+console.log(
+  momentNewDate()
+);
+
+function diffDays(startDate, endDate) {//일자 차이
+	
+	startDate = moment(startDate).format("YYYY-MM-DD");
+	endDate = moment(endDate).format("YYYY-MM-DD");
+	
+    var diffDays = Math.abs(moment(startDate).diff(endDate,"days"));
+    
+    return diffDays;
+}
+
+
+// console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
+console.log(window.navigator.userAgent);
+console.log(screen);
+console.dir(window.document);
+
+
+
+  function getScrollTop(){
+    if(window.pageYOffset !== undefined){
+      return window.pageYOffset;
+    }else{
+      return document.documentElement.scrollTop || document.body.scrollTop;
+    }
+  }
+
+  </script>
+  <style>
+    body{
+      height: 2000px;
+    }
+  </style>
+  <script>
+  
+  </script>
+</body>
+
+</html>
