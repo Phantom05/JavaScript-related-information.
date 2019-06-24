@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .tie {
+      border-bottom: 1px solid #ddd;
+    }
+    .pageNum{
+      text-decoration: none;
+      margin: 0 5px;
+    }
+    .pageNum.on{
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="tie"></div>
+  <form action="" id="menuForm" data-merge-form="true">
+    <h2>Menu</h2>
+    <div>
+      <input type="checkbox" name="projectChkBox"> Project
+    </div>
+    <div>
+      <input type="checkbox" name="dealChkBox" checked> Deal
+    </div>
+    <div>
+      <input type="checkbox" name="completeChkBox"> Complete
+    </div>
+    <div>
+      <input type="radio" name="gender" checked> male
+      <input type="radio" name="gender"> female
+    </div>
+    <div>
+      <input type="search" name="search" autocomplete="off" value="가악">
+    </div>
+  </form>
+
+
+  <div class="tie"></div>
+  <form action="" id="langForm" data-merge-form="true">
+    <h2>Lang</h2>
+    <select name="langSelectBox" id="">
+      <option value="ko">Korea</option>
+      <option value="en">English</option>
+    </select>
+  </form>
+
+  <div class="tie"></div>
+  <h2>sort</h2>
+    <form action="" id="sortForm" data-merge-form="true">
+        <select name="sortSelectBox" id="">
+          <option value="latest">latest</option>
+          </select>
+    </form>
+
+  <div class="tie"></div>
+    <h2>Pagination</h2>
+  <form action="" id="pageForm" data-merge-form="true">
+    <input type="text" value="" hidden name="pageNationPageInput">
+    <input type="submit" value="" name="submitBtn" hidden>
+  </form>
+
+  <form action="" id="pageForm2" data-merge-form="true">
+      <input type="text" value="" hidden name="pageNationPageInput">
+      <input type="submit" value="test">
+    </form>
+
+  <div class="tie"></div>
+  <br><br><br>
+  <div class="tie"></div>
+  <h2>아래가 merge Form</h2>
+
+  <form action="" id="wow">
+    <input type="text" name="hello" value="hello1">
+    <input type="checkbox" name="hello2" checked>
+    <input type="text" name="hello3" value="zz">
+    <input type="checkbox" name="hello4" checked>
+  </form>
+
+  <form action="" id="zzz">
+    <input type="text" name="world" value="world1">
+    <input type="radio" name="world2">
+    <input type="radio" name="world2" checked>
+    <button type="submit">겟</button>
+    <select name="zzSelect" id="">
+      <option value="kk">키키</option>
+    </select>
+  </form>
+
+  <script src="./mergeForm.js"></script>
+</body>
+
+</html>
