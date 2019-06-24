@@ -101,7 +101,9 @@ function setPageNation(config) {
   pageForm.after(tempElm);
 
   for (let i = config.startPage; i < config.startPage + config.pageLimit; i++) {
-    let postBtnElm = elt("button", {type: "button",'data-page-btn': "postBtn"}, String(i));
+    let postBtnElm = elt("button", {type: "button",'data-page-btn': "postBtn",
+    class:(config.btnClass)?config.btnClass:''
+  }, String(i));
 
     if (equal(i, config.curPage)) postBtnElm.setAttribute('value', 'click'); // 초기화  value setting
 
@@ -225,6 +227,7 @@ let pageConfig = {
   action: '/info/client/245',
   method: "get",
   ajax: false,
+  btnClass:"pageNum"
 
 }
 setPageNation(pageConfig);
