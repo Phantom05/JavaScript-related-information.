@@ -30,6 +30,29 @@ function setPageNation(config) {
       hiddenInput.setAttribute('value', selectBtnElm.textContent);
       pageForm.setAttribute('action', `${config.action}/${selectBtnElm.textContent}`);
       console.log(pageForm);
+
+
+      let includeForm = config.includesForm;
+      let properties = (nullCheck(includeForm)) ? includeForm : 0;
+      if (properties.length) { //includeForm이 있으면.
+        properties.map(formList => {
+          getExistElmInForm(formList).forEach(elmList=>{
+            // checkExtiseElm(pageForm,elmList)
+            elmList.setAttribute('hidden',true);
+            pageForm.appendChild(elmList);
+            // console.log(Array.from(pageForm.elements).includes(elmList));
+            // !pageForm.contains(elmList)
+            // if(!Array.from(pageForm.elements).includes(elmList)){
+            //   pageForm.appendChild(elmList);
+            // }
+            // if(!pageForm.hasOwnProperty(elmList)){ // 중복방지
+            //   pageForm.appendChild(elmList);
+            // }
+          })
+        })
+
+      }
+      
       // pageForm.submitBtn.click();
 
     })

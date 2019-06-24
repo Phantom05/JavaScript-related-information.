@@ -42,6 +42,11 @@ function doArrayClassControl(arr, action, className, all) {
   })
   return
 }
+
+function removeElement(target){
+  var targetElm = document.querySelector(target);	//제거하고자 하는 엘리먼트
+  targetElm.parentNode.removeChild(targetElm);
+}
 // 
 
 
@@ -89,117 +94,53 @@ function getExistElmInForm(elm) {
 }
 
 
-function checkExtiseElm(targetElm,pushElm){
-  // console.log(targetElm);
-  // console.log(pushElm);
-
-  // Object.values(pushElm.attributes).map(list=>{
-  //   console.log(list+'');
-  // })
-
-  for(keys in pushElm.attributes){
-    if (pushElm.attributes.hasOwnProperty(keys)) {
-      console.log(pushElm.attributes[keys]);
-      // console.log(pushElm.attributes[keys].value);
-    }
-  
-    
-  }
-
-
-  console.log(
-    // document.querySelector(`#${targetElm.id} ${pushElm.attributes[0]}`)
-  );
-
-
-  
-
-
-}
-
 function setPageNation(config) {
   let pageForm = document.getElementById(config.formId);
+  let tempElm = elt("div", {id: 'tempElm'});
   pageForm.setAttribute('method', config.method);
-
-
-  let tempElm = elt("div", {
-    id: 'tempElm'
-  });
   pageForm.after(tempElm);
-  for (let i = config.startPage; i < config.startPage + config.pageLimit; i++) {
-    let postBtnElm = elt("button", {
-      type: "button",
-      'data-page-btn': "postBtn"
-    }, i + '');
 
-    if (equal(i, config.curPage)) { // 초기화  value setting
-      postBtnElm.setAttribute('value', 'click')
-    }
+  for (let i = config.startPage; i < config.startPage + config.pageLimit; i++) {
+    let postBtnElm = elt("button", {type: "button",'data-page-btn': "postBtn"}, String(i));
+
+    if (equal(i, config.curPage)) postBtnElm.setAttribute('value', 'click'); // 초기화  value setting
 
     postBtnElm.addEventListener('click', function (e) {
-      Array.from(tempElm.getElementsByTagName('button')).forEach(tagList => { // 초기화
-        tagList.removeAttribute('value')
-      });
+      Array.from(tempElm.getElementsByTagName('button')).forEach(tagList => //초기화
+        tagList.removeAttribute('value'));
       this.setAttribute('value', 'click'); // 클릭 세팅
-      let selectBtnElm = Array.from(document.querySelectorAll(`#${tempElm.id} button`)).filter(btnList => {
-        return btnList.getAttribute('value')
-      })[0];
+      let fomrInBtn = document.querySelectorAll(`#${tempElm.id} button`);
+      let selectBtnElm = Array.from(fomrInBtn).filter(btnList => 
+        btnList.getAttribute('value'))[0];
+      let formInInput = pageForm.getElementsByTagName('input');
+      let hiddenInput = Array.from(formInInput).filter(inputList =>
+        inputList.hasAttribute('hidden'))[0];
 
-      let hiddenInput = Array.from(pageForm.getElementsByTagName('input')).filter(inputList => {
-        return inputList.hasAttribute('hidden')
-      })[0];
       hiddenInput.setAttribute('value', selectBtnElm.textContent);
       pageForm.setAttribute('action', `${config.action}/${selectBtnElm.textContent}`);
-      console.log(pageForm);
-
 
       let includeForm = config.includesForm;
       let properties = (nullCheck(includeForm)) ? includeForm : 0;
+
       if (properties.length) { //includeForm이 있으면.
-        properties.map(formList => {
-          getExistElmInForm(formList).forEach(elmList=>{
-
-            checkExtiseElm(pageForm,elmList)
-
-            if(!pageForm.contains(elmList)){ // 중복방지
-              pageForm.appendChild(elmList);
-            }
-          })
-        })
-
+        properties.map(formList => getExistElmInForm(formList).forEach(elmList=>{
+          elmList.setAttribute('hidden',true);
+          pageForm.appendChild(elmList);
+        }))
       }
-
-      // pageForm.submitBtn.click();
+      pageForm.submitBtn.click();
     })
-
     tempElm.appendChild(postBtnElm);
   }
   pageForm.addEventListener('submit', function (e) {
-    // e.preventDefault();
+    let defaultWasPrevented = e.defaultPrevented;
+    if(!defaultWasPrevented){ //  막혀있지 않으면.
+      removeElement(`#${tempElm.id}`)
+      removeElement(`#${pageForm.id}`)
+    }
   })
 
 }
-
-
-
-
-let pageConfig = {
-  startPage: 1,
-  endPage: 5,
-  pageLimit: 5,
-  curPage: 5,
-  totalPage: 201,
-  formId: "pageForm",
-  action: '/info/client/245',
-  method: "get",
-  ajax: false,
-  includesForm: ["#wow", '#zzz']
-}
-setPageNation(pageConfig);
-
-// 
-
-
 
 
 function mergeForm(config) {
@@ -211,7 +152,6 @@ function mergeForm(config) {
       e.preventDefault();
     })
   })
-
   // create mergeform
   let mergeForm = elt("form", {
     id: 'mergeForm',
@@ -264,10 +204,34 @@ function mergeForm(config) {
 }
 
 
+
+//mergeForm을 사용하려면, 머지폼 다음에 페이지네이션을 선언해야함.
 let mergeFormConfig = {
   method: "post",
   action: '/',
   ajax: false
 }
 
-// mergeForm(mergeFormConfig);
+mergeForm(mergeFormConfig);
+
+
+let pageConfig = {
+  startPage: 1,
+  endPage: 5,
+  pageLimit: 5,
+  curPage: 5,
+  totalPage: 201,
+  formId: "pageForm",
+  action: '/info/client/245',
+  method: "get",
+  ajax: false,
+
+}
+setPageNation(pageConfig);
+
+// 
+
+
+
+
+
