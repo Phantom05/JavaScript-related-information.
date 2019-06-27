@@ -78,7 +78,7 @@
   <div class="tie"></div>
   <h2>아래가 merge Form</h2>
 
-  <form action="" id="wow">
+  <!-- <form action="" id="wow">
     <input type="text" name="hello" value="hello1">
     <input type="checkbox" name="hello2" checked>
     <input type="text" name="hello3" value="zz">
@@ -93,9 +93,38 @@
     <select name="zzSelect" id="">
       <option value="kk">키키</option>
     </select>
-  </form>
+  </form> -->
 
   <script src="./mergeForm.js"></script>
+  <script>
+  let mergeForm1 = new mergeForm();
+  let page1 = new pageNation();
+
+    let mergeFormConfig = {
+      method: "get",
+      action: '/info/client/245',
+      ajax: false,
+    }
+    mergeForm1.mergeForm(mergeFormConfig);
+
+    let pageConfig = {
+      startPage: 1,
+      endPage: 10,
+      curPage: 1,
+      curPageSet:1,
+      totalPageSet:2,
+      totalPage: 201,
+      formId: "pageForm",
+      action: '/info/client/245',
+      method: "get",
+      ajax: false,
+      btnClass: "pageNum",
+      prevArrowClass:"pagePrevArrow prev",
+      nextArrowClass:"pagePrevArrow next",
+      includesForm: ["#menuForm", '#langForm', '#sortForm']
+    }
+    page1.setPageNation(pageConfig);
+  </script>
 </body>
 
 </html>
