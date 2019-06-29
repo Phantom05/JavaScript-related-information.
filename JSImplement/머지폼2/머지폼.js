@@ -2,6 +2,15 @@ class FormComponent {
   constructor() {
 
   }
+
+  
+ isObject(obj) {
+  return (typeof obj === "object" && obj !== null) && !Array.isArray(obj)  || typeof obj === "function" ;
+}
+
+ getConstructorName(obj) {
+  return (obj.constructor && obj.constructor.name) ? obj.constructor.name : "";
+}
   rmAttr(target, attr) {
     var targetElm = document.querySelector(target);
     targetElm.removeAttribute(attr);
@@ -35,6 +44,10 @@ class FormComponent {
     return node;
   }
   
+  addEvent(elm,action,f){
+    elm.addEventListener(action,f)
+  }
+
    getAttr(elm, attr) {
     return elm.getAttribute(attr)
   }
@@ -95,6 +108,7 @@ class FormComponent {
   }
 
   getExistElmInForm(formAttr) { // NOTE: 이건됬음.
+
     const form = document.querySelector(formAttr);
     const checkArr = ['checkbox', 'radio'];
     const valueArr = ['text', 'search'];
@@ -109,8 +123,8 @@ class FormComponent {
     formChildren.map(childList => {
       const childNodeName = childList.nodeName;
       const formObj = {
-        setAttrPush: function (boolz) {
-          if (boolz) {
+        setAttrPush: function (bool) {
+          if (bool) {
             setAttr(childList);
             elmArr.push(childList);
           }
@@ -123,7 +137,6 @@ class FormComponent {
       if (this.equal(childNodeName, "INPUT")) {
         formObj.setAttrPush(checkArr.includes(childList.type) && childList.checked);
         formObj.setAttrPush(valueArr.includes(childList.type) && this.nullCheck(childList.value));
-
         formObj.setAttr(childList.hasAttribute('hidden') && valueArr.includes(childList.type));
 
       } else if (this.equal(childNodeName, "SELECT")) {
@@ -137,6 +150,7 @@ class FormComponent {
         // setAttr(childList);
       }
     })
+ 
     return (this.nullCheck(elmArr)) ? elmArr : null;
   }
 }
@@ -144,14 +158,165 @@ class FormComponent {
 
 
 
-class FormConrtol extends FormComponent {
+class FormModule extends FormComponent {
   constructor() {
     super();
     this.mergeIdx = 0;
+    this.pageHiddenName =  "pageHidden",
+    this.modules={};
+    this.commonIdx = 0;
   }
 
-  include(config) {
-    this.includesForm = config;
+
+
+  common(config){
+    this.commonIdx = 1;
+    // const main = this;
+    // console.log(config);
+    // pageForm
+    // const formIncludeForms = config
+    // realTimeType = false;
+
+    // const common = {};
+    // [common.main, common.formInfo,common.commonForm] = [main,{realTime : true},config]
+    // // common.pageFormId
+    // console.log(common,'common');
+    // for(var list in  main.modules){
+    //   console.log(list);
+    //   common.pageForm = main.getElm(list);
+    //   this.checkChangeForm(common,true)
+    // }
+
+
+
+
+    const main = this;
+    const common = config;
+    const formIncludeForms = [config];
+   
+    // all forms data push for mergeForm
+    function getAllFormDataPush(form,init) {
+      return function(e){
+        if(config){
+
+          for(var pageNameList in main.modules){
+            const pageForm = main.getElm(pageNameList);
+            const formId = pageForm && pageForm.id;
+            const tarForm = main.getElm(`#${formId}`);
+            const hiddenInput = main.getCloneNode(tarForm[main.pageHiddenName]);
+            const hiddenSubmitBtn = main.getCloneNode(tarForm.getElementsByTagName('button')[0]);
+    
+            tarForm.innerHTML="";
+            tarForm.append(hiddenInput,hiddenSubmitBtn);
+    
+            formIncludeForms.map(formListId => {
+              const getElmListFromForm = main.getExistElmInForm(`${formListId}`);
+              if (getElmListFromForm) {
+                getElmListFromForm.map(elmList => {
+                  const tempElm = main.getCloneNode(elmList);
+                  tarForm.append(tempElm);
+                })
+              }
+            }) 
+          }
+        }
+      }
+    }
+
+    // default insert and all form change event for checkbox radio selectbox elements
+    function formControl(config,type){
+      const form = document.querySelector(config);
+      const changeEventCheckArr = ['checkbox', 'radio', 'select-one'];
+      const allElm = Array.from(form.elements);
+      allElm.map(elmList => {
+        if (changeEventCheckArr.includes(elmList.type)) {
+          if(type =="check"){
+            elmList.addEventListener('change', getAllFormDataPush(form))
+          }else{
+            getAllFormDataPush(form,true)()
+          }
+          
+        }
+      })
+      return form
+    }
+    if(!this.mergeIdx){ // 머지폼이 없을때
+      console.log('common!');
+      formControl(config)
+      formIncludeForms.map(list=>{
+        const form = main.getElm(list);
+        formControl(`#${form.id}`,'check');
+      })
+    }else{ // 머지폼이 있을때
+      console.log('merge');
+    }
+
+
+
+  }
+
+  realTime(config){
+    this.checkChangeForm(config)
+  }
+
+  checkChangeForm(config,setCommon){
+    const main = this;
+    const common = config;
+    const realTimeType = common.formInfo.realTime;
+    const formIncludeForms = (setCommon)? [config.commonForm]:common.main.modules[`#${config.pageForm.id}`];
+
+   
+    // all forms data push for mergeForm
+    function getAllFormDataPush(form) {
+      return function(e){
+        const pageForm = common.pageForm;
+        console.log(pageForm,'pageForm');
+        const formId = pageForm && pageForm.id;
+        const tarForm = main.getElm(`#${formId}`);
+        const hiddenInput = main.getCloneNode(tarForm[main.pageHiddenName]);
+        const hiddenSubmitBtn = main.getCloneNode(tarForm.getElementsByTagName('button')[0]);
+
+        tarForm.innerHTML="";
+        tarForm.append(hiddenInput,hiddenSubmitBtn);
+        if(main.isObject(realTimeType)){
+          main.setAttr(tarForm,['action',`${realTimeType.action}/${main.getAttr(hiddenInput,'value')}`]);
+        }
+        formIncludeForms.map(formListId => {
+          const getElmListFromForm = main.getExistElmInForm(`${formListId}`);
+          if (getElmListFromForm) {
+            getElmListFromForm.map(elmList => {
+              const tempElm = main.getCloneNode(elmList);
+              tarForm.append(tempElm);
+            })
+          }
+        }) 
+        hiddenSubmitBtn.click();
+      }
+    }
+
+    // all form change event for checkbox radio selectbox elements
+    function checkChangeElementInForm(formId) {
+      const form = document.querySelector(formId);
+      const changeEventCheckArr = ['checkbox', 'radio', 'select-one'];
+      const allElm = Array.from(form.elements);
+      allElm.map(elmList => {
+        if (changeEventCheckArr.includes(elmList.type)) {
+          elmList.addEventListener('change', getAllFormDataPush(form))
+        }
+      })
+      return form
+    }
+
+    if(!this.mergeIdx){ // 머지폼이 없을때
+      console.log('not mergeForm');
+      formIncludeForms.map(list=>{
+        const form = main.getElm(list);
+        checkChangeElementInForm(`#${form.id}`);
+      })
+
+    }else{ // 머지폼이 있을때
+      console.log('merge');
+    }
   }
 
   add(...config) {
@@ -159,107 +324,201 @@ class FormConrtol extends FormComponent {
     const main = this;
 
     for (let i = 0; i < config.length; i++) {
-      
       const formInfo = config[i];
-      const pageForm = document.getElementById(formInfo.formId);
-      const tempElm = this.elt("div", {id: 'tempElm'});
-      // const hiddenInput = this.elt("input", {type: "text",name: "pageHidden",value: formInfo.page,hidden: true})
+      const pageForm = document.querySelector(formInfo.formId);
+      const tempElm = main.elt("div", {id: `${formInfo.formId}Temp`});
       const btnClass = formInfo.btnClass ;
-      const submitBtn = this.elt("button", {type: 'submit',hidden: true});
+      const submitBtn = main.elt("button", {type: 'submit',
+      // hidden: true
+    },'전송');
       const prevArrowClass = formInfo.prevArrowClass;
       const nextArrowClass = formInfo.nextArrowClass;
-
-      // pageForm.appendChild(hiddenInput);
-      pageForm.setAttribute('method', formInfo.method);
-      pageForm.after(tempElm);
-
-      let commonInfo = {
+      const includeForms = formInfo.includeForms;
+      const realTimeType = formInfo.realTime;
+      const defaultHiddenInput = main.elt("input",{
+        type:"text",
+        name:main.pageHiddenName,
+        value:formInfo.page,
+        [`data-form-name`]:formInfo.formId
+      })
+      const commonInfo = {
         main:main,
         formInfo:formInfo,
-        // hiddenInput:hiddenInput,
         pageForm:pageForm,
-        submitBtn:submitBtn
+        submitBtn:submitBtn,
+        tempElm:tempElm
       }
+
+      pageForm.setAttribute("action",formInfo.action)
+      pageForm.setAttribute('method', formInfo.method);
+      pageForm.after(tempElm);
+      pageForm.append(defaultHiddenInput,submitBtn);
+
+
+      if(includeForms && includeForms) main.modules[formInfo.formId] = includeForms;
+      if(realTimeType && includeForms) main.realTime(commonInfo);
 
       // paging button 생성
       if (formInfo.page > formInfo.endPage) {
-        let prevBtn = pageBtnElt(commonInfo,prevArrowClass && prevArrowClass,'<')
-        prevBtn.addEventListener('click', setForm(formInfo.startPage - 1,commonInfo))
-        tempElm.append(prevBtn);
+        makeBtnset(prevArrowClass && prevArrowClass,'<',formInfo.startPage - 1)
       }
 
       for (let j = formInfo.startPage; j < formInfo.startPage + formInfo.endPage; j++) {
-        let postBtnElm  = pageBtnElt(commonInfo,btnClass && btnClass,String(j))
-        if (j === formInfo.page) main.addClass(postBtnElm,'on'); // 현재 페이지 클래스 add on 
-        postBtnElm.addEventListener('click', setForm(postBtnElm.textContent, commonInfo))
-        tempElm.append(postBtnElm);
+        makeBtnset(btnClass && btnClass,String(j) ,j,'arrow')
       }
 
       if (formInfo.pageSet !== formInfo.totalPageSet) {
-        let nextBtn = pageBtnElt(commonInfo,nextArrowClass && nextArrowClass,'>')
-        nextBtn.addEventListener('click', setForm(formInfo.endPage + 1,commonInfo))
-        tempElm.append(nextBtn);
+        makeBtnset(nextArrowClass && nextArrowClass,'>',formInfo.endPage + 1);
       }
-      // pageForm.addEventListener('submit', main.preventDefault);
+
+      function makeBtnset(condi,txt,val,type){
+        const btn = pageBtnElt(commonInfo,condi,txt,val)
+        if (val === formInfo.page) main.addClass(btn,'on');
+          main.addEvent(btn, 'click' ,setForm(val,commonInfo))
+          tempElm.append(btn);
+      }
+      getIncludeFormData(null,commonInfo) // default get IncludeForms data
+      // main.addEvent(pageForm,'submit',main.preventDefault)
     }
     // function
-    function pageBtnElt(commonInfo,condi,text){
-
+    function pageBtnElt(commonInfo,condi,text,val){
       return commonInfo.main.elt("button",{
         type:"button",
         class: condi,
-        [`data-form-name`]:commonInfo.formInfo.formId
+        [`data-form-name`]:commonInfo.formInfo.formId,
+        value:val
       },text)
     }
 
-    // 클릭시 페이지네이션 안에 히든 벨류 바꾸기 넣기.
     function setForm(data,  common) {
       return function(e){
-        let clickBtn = this;
-        clickBtn.setAttribute('value', data);
-        // main.setAttr(common.hiddenInput, ['value', main.getAttr(clickBtn, 'value')]);
+        const clickBtn = this;
         main.setAttr(common.pageForm, ['action', `${common.formInfo.action}/${main.getAttr(clickBtn,'value')}`]);
-        
-        getInclufrsFormData(main.includesForm,clickBtn,common)
-        main.getElm(`#${tempElm.id} button`).forEach(list => main.rmAttr(list, 'value')); // init
-
+        getIncludeFormData(clickBtn,common);
+        // exist realtile bool is true and includesForms
         common.submitBtn.click();
       }
     }
 
-    function getInclufrsFormData(includesForm,clickButton,common) {
-      if (!main.mergeIdx) { //안에 초기화하고  // 머지폼이 없을때 들어옴
-        let getIncludeForms = (main.nullCheck(includesForm)) ? includesForm : 0;
-        if (getIncludeForms.length) { // exist includesForm.
-          let crtHiddenInput = main.elt('input', {
-            type: "text",
-            value: clickButton.getAttribute('value'),
-            name: "pageHidden",
-            [`data-form-name`]:clickButton.getAttribute('data-form-name')
-            // hidden: true
-          });
-          common.pageForm.innerHTML = '';// 페이지네이션 폼 초기화 후 클릭한 버튼 넣어주기
-          common.pageForm.appendChild(crtHiddenInput);
-          common.pageForm.appendChild(common.submitBtn);
+    function getIncludeFormData(clickButton,common) {
 
-          // 인클루드된 폼들 추려서 어팬드
+      const includesForm = main.modules[`#${common.pageForm.id}`];
+      const getIncludeForms = includesForm && includesForm;
+      if (!main.mergeIdx) { //get in, if exist to includeForm. but if exist method mergeForm not in
+        // get input and pageForm append for includes form 
+        let crtHiddenInput = main.elt('input', {
+          type: "text",
+          value: common.formInfo.page,
+          name: main.pageHiddenName,
+          [`data-form-name`]:common.formInfo.formId,
+          // hidden: true
+        });
+
+        if(clickButton){
+          main.setAttr(crtHiddenInput,['value',main.getAttr(clickButton,"value")])
+          main.setAttr(crtHiddenInput,['data-form-name',main.getAttr(clickButton,"data-form-name")])
+        }
+        common.pageForm.innerHTML = '';// pageForm init and append hidden input
+        common.pageForm.appendChild(crtHiddenInput);
+        
+        if (getIncludeForms) {// exist includesForm.
           getIncludeForms.map(formList => {
-            if (main.nullCheck(main.getExistElmInForm(formList))) {
-              main.getExistElmInForm(formList).forEach(elmList => {
-                let tempElm = main.getCloneNode(elmList);
-                // setAttr(tempElm, ['hidden', true])
+            const getElmList = main.getExistElmInForm(formList);
+
+            if (main.nullCheck(getElmList)) {
+              getElmList.map(elmList => {
+                const tempElm = main.getCloneNode(elmList);
+                // main.setAttr(tempElm, ['hidden', true]);
                 common.pageForm.appendChild(tempElm);
               })
             }
           })
         }
+        common.pageForm.appendChild(common.submitBtn);
       }
     }
   }
 
-  mergeForm() {
+  prevent(){
+    const main =this;
+    Array.from(document.querySelectorAll('form')).map(list=>{
+      list.addEventListener('submit',main.preventDefault)
+    })
+  }
+
+  mergeForm(config) {
+    this.mergeIdx = 1;
+    let allForm = Array.from(document.querySelectorAll('[data-merge-form="true"]'));
+    // 머지폼 할때 어차피 data-merge-form으로 잡기때문에 머지폼 안할껀 그냥 폼에다가 넣지 않으면 됨.
+    let main = this;
+
+    // create mergeform
+    let mergeForm = this.elt("form", {
+      id: 'mergeForm',
+      method: config.method,
+      action: config.action,
+      // hidden:true
+    });
+    document.body.appendChild(mergeForm); // form 생성
+
+    // temp event prevent
+    mergeForm.addEventListener('submit', function (e) {
+      // e.preventDefault();
+    })
+
+    // all forms data push for mergeForm
+    function getAllFormDataPush() {
+      let mergeFormBtn = main.elt("input", {
+        type: "submit",
+        name: "mergeFormBtn"
+      })
+      mergeForm.innerHTML = '';
+      allForm.map(mergeList => {
+          let getElmListFromForm = main.getExistElmInForm(`#${mergeList.id}`);
+          if (getElmListFromForm) {
+            getElmListFromForm.map(elmList => {
+              if (elmList.name == 'pageHiddenInput') mergeForm.action = `${config.action}/${elmList.getAttribute('value')}`
+
+              let tempElm = main.getCloneNode(elmList)
+              tempElm.setAttribute('hidden', true);
+              mergeForm.appendChild(tempElm)
+            })
+          }
+        }) /
+        // 각폼들 전송시 머지폼 전송
+        mergeForm.appendChild(mergeFormBtn);
+      mergeFormBtn.click();
+    }
+
+    // all form change event for checkbox radio selectbox elements
+    var checkChangeElementInForm = (formId) => {
+      const form = document.querySelector(formId);
+      const changeEventCheckArr = ['checkbox', 'radio', 'select-one'];
+      try {
+        const allElm = Array.from(form.elements);
+        allElm.map(elmList => {
+          if (changeEventCheckArr.includes(elmList.type)) {
+            elmList.addEventListener('change', getAllFormDataPush)
+          }
+        })
+      } catch (e) {
+        console.log(e.message);
+      }
+      return form
+    }
+
+    // all form prevent
+    allForm.map(formList => {
+      formList.addEventListener('submit', function (e) { // event prevent
+        e.preventDefault();
+        console.log(this, '전송하려던 폼');
+        getAllFormDataPush()
+      })
+      checkChangeElementInForm(`#${formList.id}`);
+    })
 
   }
+
 }
 
 

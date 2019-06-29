@@ -61,6 +61,9 @@
     <div class="row">
       <div class="col-md-6 col-lg-6 col-sm-6 ">
         <div class="box">
+          <form action="" id="page1MenuForm">
+            <input type="checkbox" name="complete" checked> complete
+          </form>
           <div class="page__navigation">
             <form action="" id="pageForm1" class=""></form>
           </div>
@@ -68,6 +71,9 @@
       </div>
       <div class="col-md-6 col-lg-6 col-sm-6 ">
         <div class="box">
+          <form action="" id="page2ReactForm">
+            <input type="checkbox" name="reactBox"> reactBox
+          </form>
           <div class="page__navigation">
             <form action="" id="pageForm2" class=""></form>
           </div>
@@ -77,6 +83,12 @@
     <div class="row">
       <div class="col-md-6 col-lg-6 col-sm-6 ">
         <div class="box">
+          <form action="" id="selForm">
+            <select name="sel" id="">
+              <option value="bang">bang</option>
+              <option value="goo">goo</option>
+            </select>
+          </form>
           <div class="page__navigation">
             <form action="" id="pageForm3" class=""></form>
           </div>
@@ -84,6 +96,10 @@
       </div>
       <div class="col-md-6 col-lg-6 col-sm-6 ">
         <div class="box">
+          <form action="" id="aaabc">
+            <input type="checkbox" name="aaabcbox">
+
+          </form>
           <div class="page__navigation">
             <form action="" id="pageForm4" class=""></form>
           </div>
@@ -103,13 +119,17 @@
       pageSet: 1,
       totalPageSet: 2,
       totalPage: 201,
-      formId: "pageForm1",
+      formId: "#pageForm1",
       action: '/info/client/245',
       method: "get",
       ajax: false,
       btnClass: "pageNum",
       prevArrowClass: "pagePrevArrow prev",
       nextArrowClass: "pagePrevArrow next",
+      includeForms:['#page1MenuForm'],
+      realTime:{
+        action:"/zzzzz",
+      }
     }
     let pageConfig2 = {
       startPage: 1,
@@ -118,13 +138,15 @@
       pageSet: 1,
       totalPageSet: 2,
       totalPage: 201,
-      formId: "pageForm2",
+      formId: "#pageForm2",
       action: '/info/client/245',
       method: "get",
       ajax: false,
       btnClass: "pageNum",
       prevArrowClass: "pagePrevArrow prev",
       nextArrowClass: "pagePrevArrow next",
+      includeForms:['#page2ReactForm'],
+      realTime:true
     }
     let pageConfig3 = {
       startPage: 1,
@@ -133,13 +155,15 @@
       pageSet: 1,
       totalPageSet: 2,
       totalPage: 201,
-      formId: "pageForm3",
+      formId: "#pageForm3",
       action: '/info/client/245',
       method: "get",
       ajax: false,
       btnClass: "pageNum",
       prevArrowClass: "pagePrevArrow prev",
       nextArrowClass: "pagePrevArrow next",
+      includeForms:['#selForm'],
+      realTime:true
     }
     let pageConfig4 = {
       startPage: 1,
@@ -148,27 +172,39 @@
       pageSet: 1,
       totalPageSet: 2,
       totalPage: 201,
-      formId: "pageForm4",
-      action: '/info/client/245',
+      formId: "#pageForm4",
+      action: '/info/client/242',
       method: "get",
       ajax: false,
       btnClass: "pageNum",
       prevArrowClass: "pagePrevArrow prev",
       nextArrowClass: "pagePrevArrow next",
+      includeForms:[ '#aaabc'],
+      realTime:true
     }
     let mergeFormConfig = {
       method: "get",
       action: '/info/client/245',
       ajax: false,
       formId: "mergeForm",
-      status: false,
+      status: true,
     }
-    let formModule = new FormConrtol();
-    console.log(formModule);
+    let formModule = new FormModule();
+    
+    formModule.add(pageConfig1, pageConfig2, pageConfig3, pageConfig4);
+    formModule.common('#langForm');
 
-    formModule.add(pageConfig1, pageConfig2, pageConfig3, pageConfig4)
-    formModule.include(['#menuForm', '#langForm', '#sortForm']);
-    formModule.mergeForm(mergeFormConfig);
+    formModule.prevent();
+
+    // formModule.include(['#menuForm', '#langForm', '#sortForm']);
+    // formModule.realTime({
+    //   action:"/zzzzz",
+    //   formId:"#pageForm1"
+    // });
+    // formModule.realTime(); //리얼타임 전송은 타켓한놈만 넣어주고 전송, 타겟한 속성이 없을떈 맨 처음에 있는놈을 선택.
+    
+    // document.getElementsByTagName
+    // formModule.mergeForm(mergeFormConfig);
   </script>
 </body>
 
