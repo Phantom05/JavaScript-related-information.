@@ -3,14 +3,14 @@ class FormComponent {
 
   }
 
-  
- isObject(obj) {
-  return (typeof obj === "object" && obj !== null) && !Array.isArray(obj)  || typeof obj === "function" ;
-}
 
- getConstructorName(obj) {
-  return (obj.constructor && obj.constructor.name) ? obj.constructor.name : "";
-}
+  isObject(obj) {
+    return (typeof obj === "object" && obj !== null) && !Array.isArray(obj) || typeof obj === "function";
+  }
+
+  getConstructorName(obj) {
+    return (obj.constructor && obj.constructor.name) ? obj.constructor.name : "";
+  }
   rmAttr(target, attr) {
     var targetElm = document.querySelector(target);
     targetElm.removeAttribute(attr);
@@ -43,26 +43,26 @@ class FormComponent {
     }
     return node;
   }
-  
-  addEvent(elm,action,f){
-    elm.addEventListener(action,f)
+
+  addEvent(elm, action, f) {
+    elm.addEventListener(action, f)
   }
 
-   getAttr(elm, attr) {
+  getAttr(elm, attr) {
     return elm.getAttribute(attr)
   }
 
-   rmAttr(elm, attr) {
+  rmAttr(elm, attr) {
     return elm.removeAttribute(attr)
   }
 
-   setAttr(elm, attr) {
+  setAttr(elm, attr) {
     const [at, val] = attr;
     return elm.setAttribute(at, val)
   }
 
-  
-   addClass(elm,action){
+
+  addClass(elm, action) {
     return elm.classList.add(action)
   }
 
@@ -150,8 +150,23 @@ class FormComponent {
         // setAttr(childList);
       }
     })
- 
+
     return (this.nullCheck(elmArr)) ? elmArr : null;
+  }
+
+
+  // 생성된 메서드 this. append할 form, includeForms
+  getCommonFormData(main, pageForm, includeForms) {
+    includeForms.map(formList => {
+      const getElmList = main.getExistElmInForm(formList);
+      if (main.nullCheck(getElmList)) {
+        getElmList.map(elmList => {
+          const tempElm = main.getCloneNode(elmList);
+          // main.setAttr(tempElm, ['hidden', true]);
+          pageForm.append(tempElm);
+        })
+      }
+    })
   }
 }
 
@@ -162,137 +177,72 @@ class FormModule extends FormComponent {
   constructor() {
     super();
     this.mergeIdx = 0;
-    this.pageHiddenName =  "pageHidden",
-    this.modules={};
+    this.pageHiddenName = "pageHidden",
+      this.modules = {};
     this.commonIdx = 0;
   }
 
+  setForm(common, type) { // all forms data push for mergeForm
+    const that = this;
+    return function (e) {
 
+      const tarForm = common.pageForm;
+      const includesForm = that.modules[`#${tarForm.id}`];
+      const realTimeType = common.formInfo.realTime;
+      const getIncludeForms = that.nullCheck(includesForm) && includesForm;
 
-  common(config){
-    this.commonIdx = 1;
-    // const main = this;
-    // console.log(config);
-    // pageForm
-    // const formIncludeForms = config
-    // realTimeType = false;
+      if (!that.mergeIdx) {} //get in, if exist to includeForm. but if exist method mergeForm not in
 
-    // const common = {};
-    // [common.main, common.formInfo,common.commonForm] = [main,{realTime : true},config]
-    // // common.pageFormId
-    // console.log(common,'common');
-    // for(var list in  main.modules){
-    //   console.log(list);
-    //   common.pageForm = main.getElm(list);
-    //   this.checkChangeForm(common,true)
-    // }
+      if (type == "submit") {
+        const clickBtn = this;
+        that.setAttr(tarForm, ['action', `${common.formInfo.action}/${that.getAttr(clickBtn,'value')}`]);
+        const crtHiddenInput = that.elt('input', { // get input and pageForm append for includes form 
+          type: "text",
+          value: common.formInfo.page,
+          name: that.pageHiddenName,
+          [`data-form-name`]: common.formInfo.formId,
+          // hidden: true
+        });
 
-
-
-
-    const main = this;
-    const common = config;
-    const formIncludeForms = [config];
-   
-    // all forms data push for mergeForm
-    function getAllFormDataPush(form,init) {
-      return function(e){
-        if(config){
-
-          for(var pageNameList in main.modules){
-            const pageForm = main.getElm(pageNameList);
-            const formId = pageForm && pageForm.id;
-            const tarForm = main.getElm(`#${formId}`);
-            const hiddenInput = main.getCloneNode(tarForm[main.pageHiddenName]);
-            const hiddenSubmitBtn = main.getCloneNode(tarForm.getElementsByTagName('button')[0]);
-    
-            tarForm.innerHTML="";
-            tarForm.append(hiddenInput,hiddenSubmitBtn);
-    
-            formIncludeForms.map(formListId => {
-              const getElmListFromForm = main.getExistElmInForm(`${formListId}`);
-              if (getElmListFromForm) {
-                getElmListFromForm.map(elmList => {
-                  const tempElm = main.getCloneNode(elmList);
-                  tarForm.append(tempElm);
-                })
-              }
-            }) 
-          }
+        if (clickBtn) {
+          that.setAttr(crtHiddenInput, ['value', that.getAttr(clickBtn, "value")])
+          that.setAttr(crtHiddenInput, ['data-form-name', that.getAttr(clickBtn, "data-form-name")])
         }
+
+        commonForms() // exist includesForm.
+        tarForm.append(crtHiddenInput, common.submitBtn); // append hidden input
+        common.submitBtn.click();
+
+      } else if (type == "change") {
+        const hiddenInput = that.getCloneNode(tarForm[that.pageHiddenName]);
+        const hiddenSubmitBtn = that.getCloneNode(tarForm.getElementsByTagName('button')[0]);
+
+        if (that.isObject(realTimeType)) {
+          that.setAttr(tarForm, ['action', `${realTimeType.action}/${that.getAttr(hiddenInput,'value')}`]);
+        }
+
+        commonForms()
+        tarForm.append(hiddenInput, hiddenSubmitBtn);
+        hiddenSubmitBtn.click();
+      }
+
+      function commonForms() { // pageForm init and children elm insert
+        tarForm.innerHTML = '';
+        let commonForms = common.formInfo.commonForms;
+        if (commonForms) that.getCommonFormData(that, tarForm, commonForms);
+        if (getIncludeForms) that.getCommonFormData(that, tarForm, getIncludeForms)
       }
     }
-
-    // default insert and all form change event for checkbox radio selectbox elements
-    function formControl(config,type){
-      const form = document.querySelector(config);
-      const changeEventCheckArr = ['checkbox', 'radio', 'select-one'];
-      const allElm = Array.from(form.elements);
-      allElm.map(elmList => {
-        if (changeEventCheckArr.includes(elmList.type)) {
-          if(type =="check"){
-            elmList.addEventListener('change', getAllFormDataPush(form))
-          }else{
-            getAllFormDataPush(form,true)()
-          }
-          
-        }
-      })
-      return form
-    }
-    if(!this.mergeIdx){ // 머지폼이 없을때
-      console.log('common!');
-      formControl(config)
-      formIncludeForms.map(list=>{
-        const form = main.getElm(list);
-        formControl(`#${form.id}`,'check');
-      })
-    }else{ // 머지폼이 있을때
-      console.log('merge');
-    }
-
-
-
   }
 
-  realTime(config){
+  realTime(config) {
     this.checkChangeForm(config)
   }
 
-  checkChangeForm(config,setCommon){
-    const main = this;
-    const common = config;
-    const realTimeType = common.formInfo.realTime;
-    const formIncludeForms = (setCommon)? [config.commonForm]:common.main.modules[`#${config.pageForm.id}`];
-
-   
-    // all forms data push for mergeForm
-    function getAllFormDataPush(form) {
-      return function(e){
-        const pageForm = common.pageForm;
-        console.log(pageForm,'pageForm');
-        const formId = pageForm && pageForm.id;
-        const tarForm = main.getElm(`#${formId}`);
-        const hiddenInput = main.getCloneNode(tarForm[main.pageHiddenName]);
-        const hiddenSubmitBtn = main.getCloneNode(tarForm.getElementsByTagName('button')[0]);
-
-        tarForm.innerHTML="";
-        tarForm.append(hiddenInput,hiddenSubmitBtn);
-        if(main.isObject(realTimeType)){
-          main.setAttr(tarForm,['action',`${realTimeType.action}/${main.getAttr(hiddenInput,'value')}`]);
-        }
-        formIncludeForms.map(formListId => {
-          const getElmListFromForm = main.getExistElmInForm(`${formListId}`);
-          if (getElmListFromForm) {
-            getElmListFromForm.map(elmList => {
-              const tempElm = main.getCloneNode(elmList);
-              tarForm.append(tempElm);
-            })
-          }
-        }) 
-        hiddenSubmitBtn.click();
-      }
-    }
+  checkChangeForm(config) {
+    console.log(config);
+    const [main, common] = [this, config]
+    const formIncludeForms = common.main.modules[`#${config.pageForm.id}`];
 
     // all form change event for checkbox radio selectbox elements
     function checkChangeElementInForm(formId) {
@@ -301,23 +251,24 @@ class FormModule extends FormComponent {
       const allElm = Array.from(form.elements);
       allElm.map(elmList => {
         if (changeEventCheckArr.includes(elmList.type)) {
-          elmList.addEventListener('change', getAllFormDataPush(form))
+          elmList.addEventListener('change', main.setForm(common, 'change'))
         }
       })
       return form
     }
 
-    if(!this.mergeIdx){ // 머지폼이 없을때
+    if (!this.mergeIdx) { // 머지폼이 없을때
       console.log('not mergeForm');
-      formIncludeForms.map(list=>{
+      formIncludeForms.map(list => {
         const form = main.getElm(list);
         checkChangeElementInForm(`#${form.id}`);
       })
 
-    }else{ // 머지폼이 있을때
+    } else { // 머지폼이 있을때
       console.log('merge');
     }
   }
+
 
   add(...config) {
     this.config = config;
@@ -326,123 +277,80 @@ class FormModule extends FormComponent {
     for (let i = 0; i < config.length; i++) {
       const formInfo = config[i];
       const pageForm = document.querySelector(formInfo.formId);
-      const tempElm = main.elt("div", {id: `${formInfo.formId}Temp`});
-      const btnClass = formInfo.btnClass ;
-      const submitBtn = main.elt("button", {type: 'submit',
-      // hidden: true
-    },'전송');
+      const tempElm = main.elt("div", {
+        id: `${formInfo.formId}Temp`
+      });
+      const btnClass = formInfo.btnClass;
+      const submitBtn = main.elt("button", {
+        type: 'submit',
+        // hidden: true
+      }, '전송');
       const prevArrowClass = formInfo.prevArrowClass;
       const nextArrowClass = formInfo.nextArrowClass;
       const includeForms = formInfo.includeForms;
       const realTimeType = formInfo.realTime;
-      const defaultHiddenInput = main.elt("input",{
-        type:"text",
-        name:main.pageHiddenName,
-        value:formInfo.page,
-        [`data-form-name`]:formInfo.formId
+      const defaultHiddenInput = main.elt("input", {
+        type: "text",
+        name: main.pageHiddenName,
+        value: formInfo.page,
+        [`data-form-name`]: formInfo.formId
       })
       const commonInfo = {
-        main:main,
-        formInfo:formInfo,
-        pageForm:pageForm,
-        submitBtn:submitBtn,
-        tempElm:tempElm
+        main: main,
+        formInfo: formInfo,
+        pageForm: pageForm,
+        submitBtn: submitBtn,
+        tempElm: tempElm
       }
 
-      pageForm.setAttribute("action",formInfo.action)
+      pageForm.setAttribute("action", formInfo.action)
       pageForm.setAttribute('method', formInfo.method);
       pageForm.after(tempElm);
-      pageForm.append(defaultHiddenInput,submitBtn);
+      pageForm.append(defaultHiddenInput, submitBtn);
 
 
-      if(includeForms && includeForms) main.modules[formInfo.formId] = includeForms;
-      if(realTimeType && includeForms) main.realTime(commonInfo);
+      if (includeForms && includeForms) main.modules[formInfo.formId] = includeForms;
+      if (realTimeType && includeForms) main.realTime(commonInfo);
 
       // paging button 생성
       if (formInfo.page > formInfo.endPage) {
-        makeBtnset(prevArrowClass && prevArrowClass,'<',formInfo.startPage - 1)
+        makeBtnset(prevArrowClass && prevArrowClass, '<', formInfo.startPage - 1)
       }
 
       for (let j = formInfo.startPage; j < formInfo.startPage + formInfo.endPage; j++) {
-        makeBtnset(btnClass && btnClass,String(j) ,j,'arrow')
+        makeBtnset(btnClass && btnClass, String(j), j, 'arrow')
       }
 
       if (formInfo.pageSet !== formInfo.totalPageSet) {
-        makeBtnset(nextArrowClass && nextArrowClass,'>',formInfo.endPage + 1);
+        makeBtnset(nextArrowClass && nextArrowClass, '>', formInfo.endPage + 1);
       }
 
-      function makeBtnset(condi,txt,val,type){
-        const btn = pageBtnElt(commonInfo,condi,txt,val)
-        if (val === formInfo.page) main.addClass(btn,'on');
-          main.addEvent(btn, 'click' ,setForm(val,commonInfo))
-          tempElm.append(btn);
+      function makeBtnset(condi, txt, val, type) {
+        const btn = pageBtnElt(commonInfo, condi, txt, val)
+        if (val === formInfo.page) main.addClass(btn, 'on');
+        main.addEvent(btn, 'click', main.setForm(commonInfo, 'submit'))
+        tempElm.append(btn);
       }
-      getIncludeFormData(null,commonInfo) // default get IncludeForms data
+
+      main.setForm(commonInfo, 'submit')
+      // getIncludeFormData(null,commonInfo) // default get IncludeForms data
       // main.addEvent(pageForm,'submit',main.preventDefault)
     }
     // function
-    function pageBtnElt(commonInfo,condi,text,val){
-      return commonInfo.main.elt("button",{
-        type:"button",
+    function pageBtnElt(commonInfo, condi, text, val) {
+      return commonInfo.main.elt("button", {
+        type: "button",
         class: condi,
-        [`data-form-name`]:commonInfo.formInfo.formId,
-        value:val
-      },text)
-    }
-
-    function setForm(data,  common) {
-      return function(e){
-        const clickBtn = this;
-        main.setAttr(common.pageForm, ['action', `${common.formInfo.action}/${main.getAttr(clickBtn,'value')}`]);
-        getIncludeFormData(clickBtn,common);
-        // exist realtile bool is true and includesForms
-        common.submitBtn.click();
-      }
-    }
-
-    function getIncludeFormData(clickButton,common) {
-
-      const includesForm = main.modules[`#${common.pageForm.id}`];
-      const getIncludeForms = includesForm && includesForm;
-      if (!main.mergeIdx) { //get in, if exist to includeForm. but if exist method mergeForm not in
-        // get input and pageForm append for includes form 
-        let crtHiddenInput = main.elt('input', {
-          type: "text",
-          value: common.formInfo.page,
-          name: main.pageHiddenName,
-          [`data-form-name`]:common.formInfo.formId,
-          // hidden: true
-        });
-
-        if(clickButton){
-          main.setAttr(crtHiddenInput,['value',main.getAttr(clickButton,"value")])
-          main.setAttr(crtHiddenInput,['data-form-name',main.getAttr(clickButton,"data-form-name")])
-        }
-        common.pageForm.innerHTML = '';// pageForm init and append hidden input
-        common.pageForm.appendChild(crtHiddenInput);
-        
-        if (getIncludeForms) {// exist includesForm.
-          getIncludeForms.map(formList => {
-            const getElmList = main.getExistElmInForm(formList);
-
-            if (main.nullCheck(getElmList)) {
-              getElmList.map(elmList => {
-                const tempElm = main.getCloneNode(elmList);
-                // main.setAttr(tempElm, ['hidden', true]);
-                common.pageForm.appendChild(tempElm);
-              })
-            }
-          })
-        }
-        common.pageForm.appendChild(common.submitBtn);
-      }
+        [`data-form-name`]: commonInfo.formInfo.formId,
+        value: val
+      }, text)
     }
   }
 
-  prevent(){
-    const main =this;
-    Array.from(document.querySelectorAll('form')).map(list=>{
-      list.addEventListener('submit',main.preventDefault)
+  prevent() {
+    const main = this;
+    Array.from(document.querySelectorAll('form')).map(list => {
+      list.addEventListener('submit', main.preventDefault)
     })
   }
 
@@ -520,5 +428,3 @@ class FormModule extends FormComponent {
   }
 
 }
-
-

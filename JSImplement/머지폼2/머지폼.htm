@@ -129,7 +129,8 @@
       includeForms:['#page1MenuForm'],
       realTime:{
         action:"/zzzzz",
-      }
+      },
+      commonForms:['#langForm','#menuForm']
     }
     let pageConfig2 = {
       startPage: 1,
@@ -146,7 +147,8 @@
       prevArrowClass: "pagePrevArrow prev",
       nextArrowClass: "pagePrevArrow next",
       includeForms:['#page2ReactForm'],
-      realTime:true
+      realTime:true,
+      commonForms:['#langForm','#menuForm']
     }
     let pageConfig3 = {
       startPage: 1,
@@ -179,8 +181,8 @@
       btnClass: "pageNum",
       prevArrowClass: "pagePrevArrow prev",
       nextArrowClass: "pagePrevArrow next",
-      includeForms:[ '#aaabc'],
-      realTime:true
+      includeForms:['#aaabc'],
+      realTime:true,
     }
     let mergeFormConfig = {
       method: "get",
@@ -192,9 +194,10 @@
     let formModule = new FormModule();
     
     formModule.add(pageConfig1, pageConfig2, pageConfig3, pageConfig4);
-    formModule.common('#langForm');
-
     formModule.prevent();
+    // formModule.common('#langForm'); // common은 add 다음에.
+
+    
 
     // formModule.include(['#menuForm', '#langForm', '#sortForm']);
     // formModule.realTime({
@@ -204,7 +207,7 @@
     // formModule.realTime(); //리얼타임 전송은 타켓한놈만 넣어주고 전송, 타겟한 속성이 없을떈 맨 처음에 있는놈을 선택.
     
     // document.getElementsByTagName
-    // formModule.mergeForm(mergeFormConfig);
+    formModule.mergeForm(mergeFormConfig);
   </script>
 </body>
 
