@@ -337,7 +337,6 @@ class FormModule extends FormComponent {
     })
   }
 
-
   getAllElementFromIncludeForms(config){
     const main = this;
     const includeForms = main.nullCheck(config.includeForms) && config.includeForms;
