@@ -345,7 +345,7 @@ class FormModule extends FormComponent {
       return main.getCloneNode(main.getExistElmInForm(`#${form.id}`))
     })
     return getElmArr
-
+ 
   }
 
   doInsertElm(formId,elm){
