@@ -84,24 +84,24 @@
       <div class="col-md-6 col-lg-6 col-sm-6 ">
         <div class="box">
           <form action="" id="selForm">
-            <select name="sel" id="">
+            <select name="sel" id="" >
               <option value="bang">bang</option>
               <option value="goo">goo</option>
             </select>
           </form>
           <div class="page__navigation">
-            <form action="" id="pageForm3" class=""></form>
+            <form action="" id="pageForm3" class="" ></form>
           </div>
         </div>
       </div>
       <div class="col-md-6 col-lg-6 col-sm-6 ">
         <div class="box">
-          <form action="" id="aaabc">
+          <form action="" id="aaabc" >
             <input type="checkbox" name="aaabcbox">
 
           </form>
           <div class="page__navigation">
-            <form action="" id="pageForm4" class=""></form>
+            <form action="" id="pageForm4" class="" ></form>
           </div>
         </div>
       </div>
@@ -109,6 +109,18 @@
 
 
   </div>
+  <form action="" id="abc">
+    <input type="checkbox" name="abc1" checked>
+    <input type="checkbox" name="abc2" checked>
+    <select name="abcSelect" id="">
+      <option value="aa">aa</option>
+      <option value="bb">bb</option>
+    </select>
+  </form>
+  <form action="" id="dugForm">
+    <input type="checkbox" name="duh" id="" checked>
+    <input type="checkbox" name="duh2" checked>
+  </form>
 
   <script src="./머지폼.js"></script>
   <script>
@@ -184,17 +196,22 @@
       includeForms:['#aaabc'],
       realTime:true,
     }
+
+    let formModule = new FormModule();
+    
+    formModule.add(pageConfig1, pageConfig2, pageConfig3, pageConfig4);
+    formModule.prevent();
+
     let mergeFormConfig = {
       method: "get",
       action: '/info/client/245',
       ajax: false,
       formId: "mergeForm",
       status: true,
+      includeForms:['#langForm','#menuForm','#pageForm4','#selForm','#dugForm','#abc'],
+      realTime:false
     }
-    let formModule = new FormModule();
-    
-    formModule.add(pageConfig1, pageConfig2, pageConfig3, pageConfig4);
-    formModule.prevent();
+    formModule.mergeForm(mergeFormConfig)
     // formModule.common('#langForm'); // common은 add 다음에.
 
     
@@ -207,7 +224,6 @@
     // formModule.realTime(); //리얼타임 전송은 타켓한놈만 넣어주고 전송, 타겟한 속성이 없을떈 맨 처음에 있는놈을 선택.
     
     // document.getElementsByTagName
-    formModule.mergeForm(mergeFormConfig);
   </script>
 </body>
 

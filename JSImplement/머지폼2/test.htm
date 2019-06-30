@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./머지폼.css">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+  <style>
+    .box {
+      position: relative;
+      text-align: center;
+      margin-top: 50px;
+      border: 1px solid rgb(151, 151, 151);
+    }
+
+    .pageNum {
+      border: 0;
+    }
+
+    .pageNum.on {
+      font-weight: bold;
+    }
+
+    .pagePrevArrow {
+      background: #fff;
+      border: 1px solid #ececec;
+      border-radius: 5px;
+    }
+
+    .pagePrevArrow.next {
+      margin-left: 50px;
+    }
+
+    .pagePrevArrow.prev {
+      margin-right: 50px;
+    }
+
+    .search {
+      padding: 5px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .title {
+      font-weight: bold;
+      font-size: 19px;
+      text-align: left;
+    }
+
+    .pageNation__box {
+      position: absolute;
+      width: 100%;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+      <form action="" id="sortForm">
+          <input type="checkbox" name="latest" id=""> latest
+        </form>
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-xs-6">
+        <div class="box">
+          <div class="title">
+            page1
+          </div>
+          <div>
+            <form action="" id="langForm">
+              <select name="langSelect" id="">
+                <option value="ko">ko</option>
+                <option value="en">en</option>
+                <option value="ch">ch</option>
+              </select>
+              <input type="checkbox" name="deal" id=""> deal
+            </form>
+          </div>
+          <div class="pageNation__box">
+            <form action="" id="pageNationForm1"></form>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-6">
+        <div class="box">
+          <div class="title">
+            page2
+          </div>
+          <div>
+
+          </div>
+          <div class="pageNation__box">
+            <form action="" id="pageNationForm2"></form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-xs-6">
+        <div class="box">
+          <div class="title">
+            page3
+          </div>
+          <div class="pageNation__box">
+            <form action="" id="pageNationForm3"></form>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-6">
+        <div class="box">
+          <div class="title">
+            page4
+          </div>
+          <div class="pageNation__box">
+            <form action="" id="pageNationForm4"></form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./머지폼.js"></script>
+  <script src="./zz.js"></script>
+</body>
+
+</html>
