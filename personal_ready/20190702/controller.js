@@ -9,7 +9,7 @@
     $('.btn-increase').on("click", $.proxy(this.onClickIncrease, this));
     $('.btn-decrease').on("click", $.proxy(this.onClickDecrease, this))
   }
-
+ 
   SpinboxController.prototype = {
     onClickIncrease:function(){
       this.spinboxModel.increase();
