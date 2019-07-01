@@ -5,7 +5,7 @@
 
     this.spinboxView.render(this.spinboxModel.getData());
 
-
+ 
     $('.btn-increase').on("click", $.proxy(this.onClickIncrease, this));
     $('.btn-decrease').on("click", $.proxy(this.onClickDecrease, this))
   }
