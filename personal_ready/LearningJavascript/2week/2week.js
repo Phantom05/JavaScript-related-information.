@@ -72,7 +72,7 @@ var arr = [1];
 arr.length = 0
 console.log(arr);
 
-const obj = {b:2, c: 3, d:4};
+var obj = {b:2, c: 3, d:4};
 var a, b, c;
 ({a,b,c} = obj)
 console.log(a,b);
@@ -90,9 +90,32 @@ function f(o){
 }
 
 
- let o = {
+ var o = {
    message:'초기값'
  }
 
  f(o)
  console.log(o);
+
+
+ var arr = [];
+ arr[5] =5;
+ console.log(arr.length);
+
+ var arr = [1,2,3,4];
+//  arr.copyWithin(1,2);
+ arr.copyWithin(2,0,2)
+ console.log(arr),'f';
+
+// 첫번쨰 요소는 복사한 요소를 붙여 넣을 위치
+// 두번쨰 요소는 복사를 시작할 위치
+// 세변째 매겨번수는 복사를 끝낼 위치
+var obj = {a:1};
+var arr =[1,obj];
+console.log(
+  arr.indexOf(obj)
+);
+
+arr.find(function(list){
+  console.log(this);
+},{})
