@@ -8,7 +8,7 @@
 // var x3 = -1.5;
 // var x4 = -6.33;
 // console.log(-x1*1);
-// console.log(+x2*2);
+// console.log(+x2*2); 
 // console.log(+x3*3);
 // console.log(-x4*4);
 
@@ -119,3 +119,21 @@ console.log(
 arr.find(function(list){
   console.log(this);
 },{})
+
+console.clear();
+var arr = [5,7,2,4];
+var sum = arr.reduce((a,x)=> a+= x,0)
+console.log(sum);
+
+var words = ["Beachball","Rodeo","Angel",'Aardvark'];
+var alphabetical = words.reduce((a,x)=> {
+  if(!a[x[0]]) a[x[0]] = [];
+  a[x[0]].push(x)
+  return a;
+},{})
+
+console.log(alphabetical);
+
+var words = ["Beachball", "Rodeo", "Angel","Papaya"];
+var longWords = words.reduce((a,w) => w.length >= 6 ? a + " " + w : a,"").trim();
+console.log(longWords);
