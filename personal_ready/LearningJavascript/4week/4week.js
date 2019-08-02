@@ -138,13 +138,104 @@ class Vehidle{
   }
 }
 
-class Car extends Vehicle{
+// class Car extends Vehicle{
+//   constructor(){
+//     super();
+//     console.log(`Car created`);
+//   }
+//   deployAirbags(){
+//     console.log(`BWOOSH!`);
+//   }
+// }
+
+class Motorcycle extends Vehidle{};
+
+class Super{
+  constructor(){
+    this.name = 'Super';
+    this.isSuper = true;
+  }
+}
+// 유효하지만, 권장하지는 않습니다.
+Super.prototype.sneaky = `not recommended`;
+
+class Sub extends Super{
   constructor(){
     super();
-    console.log(`Car created`);
-  }
-  deployAirbags(){
-    console.log(`BWOOSH!`);
+    this.name = 'Sub';
+    this.isSub = true
   }
 }
 
+var obj = new Sub();
+
+for(let p in obj){
+  console.log(`${p}: ${obj[p]} ${obj.hasOwnProperty(p)?'':'(inherited)'}`);
+}
+
+
+
+
+class InsurancePolicy{}
+function makeInsurable(o){
+  o.addInsurancePolicy = function(p){ this.insurancePolicy = p; }
+  o.getInsurancePolicy = function(){ return this.insurancePolicy ; }
+  o.isInsured = function(){ return !!this.insurancePolicy ;}
+}
+class Car2{
+  static getNextVin(){
+    return Car1.nextVin++
+  }
+  constructor(make,model){
+    this.make = make;
+    this.model = model;
+    this.vin = Car1.getNextVin()
+  }
+  static areSimilar(car1,car2){
+    return car1.make === car2.make && car1.model === car2.model
+  }
+  static areSame(car1,car2){
+    return car1.vin === car2.vin;
+  }
+}
+makeInsurable(Car2.prototype)
+// 프로토 타입에 객체를 선언해버림.
+var car1 = new Car2()
+car1.addInsurancePolicy(new InsurancePolicy());
+// 이렇게되면 Car2를 상속받은 car1에서 makeInsurable에서 만들어진 메서드를 사용할 수 있음.
+console.log(car1);
+
+
+
+// var ADD_POLICY = Symbol();
+// var GET_POLICY = Symbol();
+// var IS_INSURED = Symbol();
+// var _POLICY = Symbol();
+// function makeInsurable(o){
+//   o[ADD_POLICY] = function(p){ this[_POLICY] = p; }
+//   o[GET_POLICY] = function(){return this[_POLICY]}
+//   o[IS_INSURED] = function(){return !!this[_POLICY]}
+// }
+
+
+var u1 = {name:"Cynthia"};
+var u2 = {name:"Jackson"};
+var u3 = {name:"Olive"};
+var u4 = {name:"James"};
+
+var userRoles = new Map();
+userRoles
+.set(u1,'User')
+.set(u2,'User')
+.set(u3,'Admin');
+
+console.log(userRoles.keys());
+var userRoles = new Map([
+  [u1,'User'],
+  [u2,'User'],
+  [u3,'Admin']
+])
+console.log(userRoles);
+for(var u of userRoles.values()){
+  console.log(u.name);
+}
