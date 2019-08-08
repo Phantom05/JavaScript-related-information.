@@ -239,3 +239,107 @@ console.log(userRoles);
 for(var u of userRoles.values()){
   console.log(u.name);
 }
+console.clear();
+var SecretHolder = (function(){
+  const secrets = new WeakMap();
+  return class{
+    setSecret(secret){
+      secrets.set(this, secret);
+    }
+    getSecret(){
+      return secrets.get(this);
+    }
+  }
+})();
+
+
+var a = new SecretHolder();
+var b = new SecretHolder();
+
+a.setSecret('secret A');
+b.setSecret('secret B');
+
+console.log(a.getSecret());
+//일반적인 Map을 써도 되지만, 그렇게하면 SecretHolder 인스턴스에 저장한 내영은 가비지 컬렉션에 포함되지 않습니다.?
+
+var bb = {
+  a:1,
+  b:2
+}
+for(var ab in bb){
+  console.log(ab);
+}
+
+var c = [1,2,3,4,5];
+
+c.reduce((a,b)=>{
+  console.log(b);
+},0);
+
+
+function printMap(map){
+  for(let [key,value] of map){
+    console.log(`key: ${key}, value : ${value}`);
+  }
+}
+var newMap = new Map([
+  ['1','one'],
+  ['2','two']
+])
+console.log(newMap);
+let webs = new Map();
+webs.set('1', 'React')
+    .set('2', 'Angular2')
+    .set('3', 'Vue')
+    .set({a:1}, 'Redux');
+
+console.log(webs);
+// Expected console
+// key: something, value: something
+
+console.log(`webs.get('1'): ${webs.get('1')}`);
+webs.forEach((value, key, obj) => {
+  console.log(`key: ${key}, value: ${value}`);
+});
+
+var roles = new Set();
+roles.add('User');
+roles.add('Admin');
+console.log(roles);
+
+
+function validateEmail(email){
+  return email.match(/@/)?
+  email:
+  new Error(`invaild email: ${email}`)
+}
+try{
+  var email = 'janedoe.com';
+  var validatedEmail = validateEmail(email);
+  if(validatedEmail instanceof Error){
+    console.error(`Error : ${validatedEmail.message}`)
+  }else{
+    console.log(`Vaild email : ${validatedEmail}`);
+  }
+}catch(err){
+  console.error(`Error: ${err.message}`)
+}
+console.clear()
+var book = [
+  `Twinkle, twinkle, little bat!`,
+  `How I wonder what you're at!`,
+  `Up above the world you fly`,
+  `Like a tea tray in the sky`,
+  `Twinkle, twinkle, little bat!`,
+  `How I wonder what you're at!`
+]
+var it = book.values();
+console.log(
+  it.next()
+);
+
+class Log{
+  constructor(){
+    this.messages = [];
+  }
+}
