@@ -106,3 +106,26 @@ var sumOfCubes = newSummer(x => Math.pow(x,3));
 console.log(
   sumOfSquaress([1,2,3])
 );
+
+// function findNeedle(haystack){
+//   if(haystack.length === 0) return `no haystack`
+//   if(haystack.shift() === 'needle') return `found it!`
+//   return findNeedle(haystack)
+// }
+
+
+setTimeout(fg, 3000);
+function fg(){
+  console.log('after');
+}
+
+function countdown(){
+  let i;
+  console.log(`Countdown`);
+  for(i = 5; i>= 0; i--){
+    setTimeout(() => {
+      console.log(i===0?"Go":i);
+    }, (5*i)*1000);
+  }
+}
+countdown()
