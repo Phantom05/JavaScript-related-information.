@@ -86,15 +86,17 @@ else if (year % 100 != 0) console.log(`${year} IS a `);
  console.log('hello world!');
 
  var gl;
- function start(){
-   var canvas = document.getElementById('glcanvas');
+//  function start(){
+//    var canvas = document.getElementById('glcanvas');
 
-   gl = initWebGL(canvas);
+//    gl = initWebGL(canvas);
 
-   if(gl){
-     gl.clearColor(0.0, 0.0, 0.0, 1.0);
-     gl.enable(gl.DEPTH_TEST);
-     gl.depthFunc(gl.LEQUAL);
-     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-   }
- }
+//    if(gl){
+//      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+//      gl.enable(gl.DEPTH_TEST);
+//      gl.depthFunc(gl.LEQUAL);
+//      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+//    }
+//  }
+
+ console .clear()
