@@ -1,6 +1,12 @@
+// 마지막 호출.
 window.addEventListener('load',function(){
   console.log('app.js excute');
   new SpinboxController();
+<<<<<<< HEAD
+});
+
+
+=======
 })
 
 
@@ -49,3 +55,4 @@ var ttt = new Allie();
 console.log(
   ttt.toString()
 );
+>>>>>>> 9c88a8d13449775cbb808b147e678036cb1f848c
