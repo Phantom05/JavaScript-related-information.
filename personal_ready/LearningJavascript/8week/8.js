@@ -11,7 +11,7 @@ function countdown(seconds){
       }, (seconds - i) *1000);
     }
   });
-}
+} 
 
 // const p = countdown(14);
 // p.then(function(){
@@ -48,7 +48,6 @@ class Countdown extends EventEmitter{
     this.superstitious = !!superstitious; // 값이 있을때.
     console.log(!!superstitious);
   }
-
   go(){
     const countdown = this;
     const timeoutIds = [];
@@ -103,3 +102,4 @@ c.go()
 .catch(function(err){
   console.error(`Houston, we have a proble ${err.message}`)
 }) // 어디에 넣어도 도중 에러가발생하면 carch로 넘어오게됨.
+

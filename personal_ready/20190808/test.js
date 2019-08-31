@@ -13,7 +13,7 @@ class Log{
     return this.messages.values();
   }
 }
-
+ 
 
 var log = new Log();
 log.add('first data at sea');
