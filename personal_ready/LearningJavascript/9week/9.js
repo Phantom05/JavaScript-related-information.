@@ -84,6 +84,53 @@ class addClass{
 }
 
 let weapon = new addClass('abc');
-weapon.SET('button')
-weapon.SET('body')
-weapon.RM('button')
+weapon.SET('button');
+weapon.SET('body');
+weapon.RM('button');
+
+
+
+
+function nfcall(f,...args){
+  return new Promise(function(resolve, reject){
+    if(err) return reject(err);
+    resolve(args.length < 2 ? args[0] : args);
+  })
+}
+
+function ptimeout(delay){
+  return new Promise(function(resolve, reject){
+    setTimeout(() => resolve, delay);
+  })
+}
+
+function grun(g){
+  const it = g();
+  (function iterate(val){
+    const x = it.next(val);
+    if(!x.done){
+      if(x.value instanceof Promise){
+        x.value.then(iterate).catch(err => it.throw(err));
+      }else{
+        setTimeout(() => iterate, 0, x.value);
+      }
+    }
+  })()
+}
+
+function* theFutureIsNow(){
+  const dataA = yield nfcall(fs.readFile,'a.txt');
+  const dataB = yield nfcall(fs.readFile,'b.txt');
+  const dataC = yield nfcall(fs.readFile,'c.txt');
+
+}
+grun(theFutureIsNow);
+
+
+function* gello(){
+  const dataA = yield gcall(fs.readFile,'a.txt');
+}
+
+function gcall(){
+  setti
+}
