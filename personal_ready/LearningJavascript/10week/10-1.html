@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Page Title</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+  <!-- new lib-->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+</head>
+
+<style>
+  .table-responsive {
+    height: 500px;
+    overflow: auto;
+  }
+
+  .coin__text {
+    font-size: 12px;
+  }
+</style>
+
+<body>
+
+  <div class="container">
+    <h1>키지 전광판 그래프 : <span id="current">BTC</span></h1>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <th>count</th>
+          <th>Coin</th>
+          <th>Price</th>
+          <th>Max Price</th>
+          <th>Min Price</th>
+          <th>Time</th>
+        </thead>
+        <tbody id="target"></tbody>
+      </table>
+    </div>
+    <h3>BTC/KRW</h3>
+    <canvas id="myChart" width="400" height="100"></canvas>
+  </div>
+
+
+  <script>
+    function getId(id) {
+      return document.getElementById(id)
+    }
+
+    function ctEl(name) {
+      return document.createElement(name);
+    }
+
+    function numWithCommas(x) {
+      if (x == null || x == undefined) return '0';
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function setInfomationm(apiName, coinName, target) {
+      let tr = ctEl('tr');
+      let td0 = ctEl('td');
+      let td1 = ctEl('td');
+      let td2 = ctEl('td');
+      let td3 = ctEl('td');
+      let td4 = ctEl('td');
+      let td5 = ctEl('td');
+
+      td0.setAttribute('id', `${apiName}_count`)
+      td1.setAttribute('id', `${apiName}_name`)
+      td2.setAttribute('id', `${apiName}_price`)
+      td3.setAttribute('id', `${apiName}_max_price`)
+      td4.setAttribute('id', `${apiName}_min_price`)
+      td5.setAttribute('id', `${apiName}_time`)
+
+      td0.setAttribute('class', `coin__text coin_count`)
+      td1.setAttribute('class', `coin__text coin_name`)
+      td2.setAttribute('class', `coin__text coin_price`)
+      td3.setAttribute('class', `coin__text coin_max_price`)
+      td4.setAttribute('class', `coin__text coin_min_price`)
+      td5.setAttribute('class', `coin__text coin_time`)
+
+      tr.append(td0, td1, td2, td3, td4, td5);
+      target.append(tr)
+
+
+      // target.innerHT
+      let url = `https://api.bithumb.com/public/ticker/${apiName}`,
+        count = 0;
+      setInterval(() => {
+        getId(`${apiName}_count`).textContent = ++count;
+        axios.get(url)
+          .then(function (response) {
+            // handle success
+            let data = response.data.data;
+            getId(`${apiName}_name`).textContent = `${coinName}`
+            getId(`${apiName}_max_price`).textContent = `${numWithCommas(data.max_price)} KRW`
+            getId(`${apiName}_max_price`).textContent = `${numWithCommas(data.min_price)} KRW`
+            getId(`${apiName}_min_price`).textContent = `${numWithCommas(data.min_price)} KRW`
+            getId(`${apiName}_price`).textContent = `${numWithCommas(data.closing_price)} KRW`
+            getId(`${apiName}_time`).textContent = data.date
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          });
+      }, 1000);
+    }
+
+    let tar = getId('target');
+    setInfomationm(`BTC`, `비트코인`, tar);
+    setInfomationm(`ETH`, `이더이움`, tar);
+    setInfomationm(`EOS`, `이오스`, tar);
+    setInfomationm(`XRP`, `리플`, tar);
+    setInfomationm(`BCH`, `비트코인 캐시`, tar);
+    setInfomationm(`LTC`, `라이트코인`, tar);
+    setInfomationm(`XLM`, `스텔라루멘`, tar);
+    setInfomationm(`ETC`, `제트캐시`, tar);
+    setInfomationm(`XEM`, `베이직어텐션토큰`, tar);
+    setInfomationm(`VET`, `비체인`, tar);
+    setInfomationm(`BTG`, `비트코인 골드`, tar);
+    setInfomationm(`OMG`, `오미세고`, tar);
+    setInfomationm(`BCD`, `페블릭`, tar);
+    setInfomationm(`BTT`, `비트코인 다이아몬드`, tar);
+    setInfomationm(`WAVES`, `웨이브`, tar);
+
+
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+          label: '# of Votes',
+          data: [12, 19, 3, 5, 2, 3],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+  </script>
+
+  <!-- <script src="./10.js"></script> -->
+</body>
+
+</html>

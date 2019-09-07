@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Page Title</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+  <link href="https://unpkg.com/bootstrap-table@1.15.4/dist/bootstrap-table.min.css" rel="stylesheet">
+
+  <script src="https://unpkg.com/bootstrap-table@1.15.4/dist/bootstrap-table.min.js"></script>
+
+  <!-- new lib-->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<style>
+  .table-responsive {
+    height: 500px;
+    overflow: auto;
+  }
+</style>
+
+<body>
+
+
+  <div class="container">
+    <button id="btn">클릭</button>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <th>#</th>
+          <th>address</th>
+          <th>gasPrice</th>
+          <th>Bloc kNumber</th>
+          <th>log</th>
+          <th>time</th>
+        </thead>
+        <tbody id="target">
+      </table>
+    </div>
+  </div>
+
+  
+
+  <script>
+    document.querySelector('#btn').addEventListener('click', clickEvent);
+
+    function ctEl(name) {
+      return document.createElement(name);
+    }
+
+    function clickEvent(e) {
+      const url =
+        'https://api-ropsten.etherscan.io/api?module=logs&action=getLogs&fromBlock=379224&toBlock=latest&address=0x96604Ac7312f3ba2c0f778564F0D13bFA5A54faa&topic0=0x5436f9c7563d4b5be022d399b41f15519419cafca0f81c49d0cfbe78b925cbff&apikey=IQN5KP8AKJ9WFTYNGZRJE7W3QHXPT4S65H';
+
+      axios.get(url)
+        .then(function (response) {
+          // handle success
+          target.innerHTML = ''
+          response.data.result.map((list, idx) => {
+            let tr = ctEl('tr');
+            let td0 = ctEl('td');
+            let td1 = ctEl('td');
+            let td2 = ctEl('td');
+            let td3 = ctEl('td');
+            let td4 = ctEl('td');
+            let td5 = ctEl('td');
+
+            td0.textContent = list.logIndex
+            td1.textContent = list.address
+            td3.textContent = list.gasPrice
+            td2.textContent = list.blockNumber
+            td4.textContent = list.logIndex
+            td5.textContent = list.timeStamp
+            tr.append(td0, td1, td2, td3, td4, td5);
+            console.log(list);
+            target.append(tr)
+            console.log(tr);
+          })
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function () {
+          // always executed
+        });
+    }
+
+
+
+  </script>
+</body>
+
+</html>

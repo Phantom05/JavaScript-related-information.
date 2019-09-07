@@ -25,7 +25,7 @@ async function axTest(type) {
       response.data.name = 1;
       setTimeout(() => {
         it.next(response.data)
-      }, 2000);
+      }, 2000);111111
     })
   }
   if(type === 2){
@@ -44,7 +44,7 @@ function resultTest(...data){
   console.log(`Result Data :`);
   console.log(data);
   setTimeout(() => {
-    it.next()
+    it.next(); // 버그인지 바로호출하면 안됨.
   }, 0);
 }
 function hello(){
@@ -93,5 +93,15 @@ function rollingPromise(n){
     return ;
   })
 
+}
+
+
+
+function* allGen(){
+  try{
+    yield Promise.all([f1(),f2()])
+  }catch(e){
+    console.log(e.message);
+  }
 }
 
