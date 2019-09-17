@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <form action="" onsubmit="return test(this)" id="testForm">
+    <input type="checkbox" name="agree1">
+    <input type="submit" value="submit">
+  </form>
+
+  <script>
+    function test(form) {
+
+      if (form.agree2 && !form.agree2.checked) {
+        console.log('ok2');
+      }
+      if (form.agree1 && !form.agree1.checked) {
+        console.log('ok1');
+      }
+
+    }
+
+
+
+  </script>
+</body>
+
+</html>
